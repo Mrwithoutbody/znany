@@ -1,0 +1,1734 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FORM — AI recovery coach · znany.pl ecosystem</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Fraunces:ital,opsz,wght@1,9..144,400;1,9..144,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #050608;
+    --bg-2: #0a0c10;
+    --surface: #0e1117;
+    --surface-2: #151922;
+    --glass: rgba(255,255,255,0.04);
+    --line: #1a1f2a;
+    --line-2: #262d3b;
+    --ink: #fafafa;
+    --ink-2: #9da5b4;
+    --ink-3: #5d6573;
+    --lime: #a3e635;
+    --lime-2: #84cc16;
+    --lime-soft: rgba(163,230,53,0.12);
+    --orange: #ea580c;
+    --orange-soft: rgba(234,88,12,0.14);
+    --cyan: #06b6d4;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  ::selection { background: var(--lime); color: #000; }
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; cursor: pointer; border: none; }
+
+  .container { max-width: 1280px; margin: 0 auto; padding: 0 32px; position: relative; }
+  @media (max-width: 700px) { .container { padding: 0 20px; } }
+
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  .display { font-family: 'Space Grotesk', sans-serif; }
+  .serif-i {
+    font-family: 'Fraunces', Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    font-variation-settings: "opsz" 144;
+    color: var(--lime);
+  }
+
+  /* ============================
+     GLOBAL BG ORBS
+     ============================ */
+  .bg-orbs {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.35;
+  }
+  .orb.lime { background: var(--lime); width: 500px; height: 500px; top: -100px; right: -150px; opacity: 0.12; }
+  .orb.orange { background: var(--orange); width: 600px; height: 600px; bottom: -200px; left: -200px; opacity: 0.08; }
+  .orb.cyan { background: var(--cyan); width: 300px; height: 300px; top: 40%; left: 30%; opacity: 0.05; }
+
+  /* ============================
+     RIBBON + NAV
+     ============================ */
+  .ribbon {
+    background: #000;
+    color: var(--lime);
+    text-align: center;
+    font-size: 10px;
+    padding: 8px 16px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 600;
+    border-bottom: 1px solid var(--line);
+    position: relative;
+    z-index: 100;
+  }
+  .ribbon a { color: rgba(255,255,255,0.5); text-decoration: underline; margin-left: 16px; font-weight: 400; }
+
+  nav.top {
+    position: sticky;
+    top: 0;
+    z-index: 90;
+    padding: 18px 0;
+    background: rgba(5,6,8,0.8);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .logo-mark {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--lime) 0%, var(--lime-2) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(163,230,53,0.4);
+  }
+  .logo-mark svg { color: #000; }
+  .logo .brand {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: -0.02em;
+  }
+  .logo .powered {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-3);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-left: 4px;
+  }
+  nav.top ul {
+    list-style: none;
+    display: flex;
+    gap: 32px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  nav.top li a { color: var(--ink-2); transition: color 0.15s; }
+  nav.top li a:hover { color: var(--lime); }
+  @media (max-width: 900px) { nav.top ul { display: none; } }
+
+  .btn {
+    background: var(--lime);
+    color: #000;
+    border-radius: 100px;
+    padding: 11px 22px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn:hover { background: white; transform: translateY(-1px); }
+  .btn svg { width: 14px; height: 14px; }
+  .btn.big { padding: 17px 30px; font-size: 15px; }
+  .btn.dark {
+    background: var(--surface-2);
+    color: var(--ink);
+    border: 1px solid var(--line-2);
+  }
+  .btn.dark:hover { background: var(--surface); border-color: var(--ink-3); }
+  .btn.ghost {
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--line-2);
+  }
+  .btn.ghost:hover { background: var(--glass); border-color: var(--ink-3); }
+
+  /* ============================
+     HERO
+     ============================ */
+  .hero {
+    padding: 80px 0 120px;
+    position: relative;
+    z-index: 1;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 32px;
+    align-items: center;
+  }
+  @media (max-width: 1000px) {
+    .hero-grid { grid-template-columns: 1fr; gap: 64px; }
+  }
+
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--lime-soft);
+    border: 1px solid rgba(163,230,53,0.3);
+    color: var(--lime);
+    padding: 8px 14px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    margin-bottom: 32px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .hero-tag .dot {
+    width: 6px; height: 6px;
+    background: var(--lime);
+    border-radius: 50%;
+    animation: pulse 1.6s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(163,230,53,0.5); }
+    50% { opacity: 0.5; box-shadow: 0 0 0 8px rgba(163,230,53,0); }
+  }
+
+  .hero h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(56px, 9vw, 124px);
+    font-weight: 700;
+    letter-spacing: -0.05em;
+    line-height: 0.88;
+    margin-bottom: 32px;
+    color: var(--ink);
+  }
+  .hero h1 .line { display: block; }
+  .hero h1 .dot { color: var(--lime); }
+
+  .hero .lead {
+    font-size: 18px;
+    color: var(--ink-2);
+    line-height: 1.6;
+    margin-bottom: 40px;
+    max-width: 480px;
+  }
+  .hero .lead strong { color: var(--ink); font-weight: 600; }
+
+  .hero-cta {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 48px;
+  }
+  .store-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--surface-2);
+    color: var(--ink);
+    border: 1px solid var(--line-2);
+    padding: 12px 22px;
+    border-radius: 14px;
+    transition: all 0.15s;
+  }
+  .store-btn:hover { border-color: var(--lime); transform: translateY(-1px); }
+  .store-btn svg { width: 26px; height: 26px; flex-shrink: 0; }
+  .store-btn .top {
+    font-size: 10px;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 500;
+  }
+  .store-btn .name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 36px;
+    flex-wrap: wrap;
+  }
+  .hero-stat .v {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .hero-stat .v .accent { color: var(--lime); }
+  .hero-stat .k {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--ink-3);
+    font-weight: 500;
+    margin-top: 6px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ============================
+     PHONE MOCKUP
+     ============================ */
+  .phone-stage {
+    position: relative;
+    aspect-ratio: 1/1.1;
+    perspective: 1000px;
+  }
+  .phone {
+    position: absolute;
+    background: #000;
+    border-radius: 38px;
+    border: 8px solid #1a1f2a;
+    box-shadow:
+      0 30px 60px rgba(0,0,0,0.5),
+      0 0 0 1px rgba(255,255,255,0.04) inset;
+    overflow: hidden;
+    transition: transform 0.3s;
+  }
+  .phone.main {
+    width: 70%;
+    aspect-ratio: 9/19.5;
+    top: 5%;
+    left: 18%;
+    transform: rotate(-4deg);
+    z-index: 3;
+    box-shadow:
+      0 50px 100px rgba(163,230,53,0.15),
+      0 30px 60px rgba(0,0,0,0.5),
+      0 0 0 1px rgba(255,255,255,0.06) inset;
+  }
+  .phone.side {
+    width: 55%;
+    aspect-ratio: 9/19.5;
+    top: 12%;
+    right: -8%;
+    transform: rotate(8deg);
+    z-index: 2;
+    opacity: 0.75;
+    filter: blur(0.5px);
+  }
+  .phone.side-2 {
+    width: 50%;
+    aspect-ratio: 9/19.5;
+    bottom: 0;
+    left: -8%;
+    transform: rotate(-12deg);
+    z-index: 1;
+    opacity: 0.6;
+    filter: blur(1px);
+  }
+
+  /* Phone screen content */
+  .screen {
+    background: linear-gradient(170deg, #0a0c10 0%, #050608 100%);
+    width: 100%; height: 100%;
+    color: var(--ink);
+    padding: 22px 16px 16px;
+    font-size: 11px;
+    position: relative;
+    overflow: hidden;
+  }
+  .status {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    margin-bottom: 16px;
+    font-size: 11px;
+  }
+  .status .dots {
+    display: flex; gap: 3px;
+  }
+  .status .dots span {
+    width: 4px; height: 4px;
+    background: var(--ink);
+    border-radius: 50%;
+  }
+  .screen-header {
+    margin-bottom: 18px;
+  }
+  .screen-header .hi {
+    font-size: 10px;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .screen-header .name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  /* Recovery score ring */
+  .score-ring {
+    width: 130px;
+    height: 130px;
+    margin: 16px auto 18px;
+    position: relative;
+  }
+  .score-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .score-ring .ring-bg { stroke: var(--line-2); fill: none; stroke-width: 8; }
+  .score-ring .ring-fg {
+    stroke: var(--lime);
+    fill: none;
+    stroke-width: 8;
+    stroke-linecap: round;
+    filter: drop-shadow(0 0 6px rgba(163,230,53,0.7));
+  }
+  .score-ring .inner {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .score-ring .num {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--lime);
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .score-ring .label {
+    font-size: 9px;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    margin-top: 4px;
+  }
+  .score-rows {
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .score-row {
+    background: var(--glass);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 8px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 10px;
+  }
+  .score-row .k { color: var(--ink-2); }
+  .score-row .v {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .score-row .v.good { color: var(--lime); }
+  .score-row .v.warn { color: var(--orange); }
+
+  /* Side phone — booking */
+  .screen.booking { padding: 22px 14px 14px; }
+  .booking-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+  .booking-card {
+    background: var(--glass);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 8px;
+  }
+  .booking-card.active {
+    background: var(--lime-soft);
+    border-color: rgba(163,230,53,0.4);
+  }
+  .booking-card .head {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+  }
+  .booking-card .head .price { color: var(--lime); }
+  .booking-card .meta { font-size: 9px; color: var(--ink-3); }
+
+  /* Side phone 2 — workout */
+  .workout-hero {
+    aspect-ratio: 4/3;
+    background: linear-gradient(135deg, var(--orange) 0%, #c2410c 100%);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    padding: 10px;
+    position: relative;
+  }
+  .workout-hero .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: rgba(0,0,0,0.6);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .workout-hero .title {
+    position: absolute;
+    bottom: 10px; left: 10px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: white;
+  }
+
+  /* Hovering chips on phone stage */
+  .float-chip {
+    position: absolute;
+    background: var(--surface-2);
+    border: 1px solid var(--line-2);
+    border-radius: 12px;
+    padding: 10px 14px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    z-index: 5;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-size: 12px;
+    backdrop-filter: blur(10px);
+  }
+  .float-chip .ico {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--lime-soft);
+    color: var(--lime);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .float-chip .v {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1;
+    display: block;
+  }
+  .float-chip .k {
+    font-size: 9px;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    margin-top: 2px;
+  }
+  .float-chip.top-right { top: 8%; right: -4%; }
+  .float-chip.bottom-left { bottom: 18%; left: -8%; }
+  .float-chip.middle-right { top: 50%; right: -8%; }
+
+  @media (max-width: 700px) {
+    .float-chip { display: none; }
+    .phone.side, .phone.side-2 { display: none; }
+    .phone.main { width: 80%; left: 10%; }
+  }
+
+  /* ============================
+     SECTION
+     ============================ */
+  section.block { padding: 120px 0; position: relative; z-index: 1; }
+  @media (max-width: 700px) { section.block { padding: 80px 0; } }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--lime);
+    margin-bottom: 20px;
+  }
+  .eyebrow::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: var(--lime);
+  }
+  h2.section-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(36px, 5.5vw, 76px);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 0.95;
+    max-width: 900px;
+    margin-bottom: 24px;
+    color: var(--ink);
+  }
+  .section-sub {
+    color: var(--ink-2);
+    font-size: 18px;
+    max-width: 640px;
+    line-height: 1.6;
+    margin-bottom: 64px;
+  }
+
+  /* ============================
+     FEATURES — 2x2 with phone hints
+     ============================ */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  @media (max-width: 800px) { .features-grid { grid-template-columns: 1fr; } }
+  .feature {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    padding: 36px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+  }
+  .feature:hover {
+    border-color: var(--lime);
+    transform: translateY(-4px);
+  }
+  .feature::after {
+    content: '';
+    position: absolute;
+    width: 300px; height: 300px;
+    top: -100px; right: -100px;
+    background: radial-gradient(circle, var(--lime-soft) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+  }
+  .feature:hover::after { opacity: 1; }
+  .feature .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-3);
+    letter-spacing: 0.14em;
+    margin-bottom: 24px;
+  }
+  .feature h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin-bottom: 12px;
+    line-height: 1.05;
+  }
+  .feature p {
+    color: var(--ink-2);
+    font-size: 15px;
+    line-height: 1.65;
+    margin-bottom: 28px;
+  }
+  .feature-viz {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 20px;
+    min-height: 160px;
+    position: relative;
+  }
+
+  /* Chart viz */
+  .chart-bar {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    height: 100px;
+    margin-top: 8px;
+  }
+  .chart-bar .b {
+    flex: 1;
+    background: var(--line-2);
+    border-radius: 4px;
+    position: relative;
+  }
+  .chart-bar .b.lime { background: linear-gradient(180deg, var(--lime) 0%, var(--lime-2) 100%); box-shadow: 0 0 12px rgba(163,230,53,0.3); }
+  .chart-bar .b.orange { background: var(--orange); }
+
+  /* Booking viz */
+  .booking-list { display: flex; flex-direction: column; gap: 8px; }
+  .book-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 14px;
+    background: var(--glass);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    font-size: 13px;
+  }
+  .book-item.active { background: var(--lime-soft); border-color: rgba(163,230,53,0.3); }
+  .book-item .name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .book-item .price {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    color: var(--lime);
+  }
+  .book-item .meta { font-size: 11px; color: var(--ink-3); margin-top: 2px; font-family: 'JetBrains Mono', monospace; }
+
+  /* AI chat viz */
+  .chat { display: flex; flex-direction: column; gap: 10px; }
+  .msg {
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 13px;
+    max-width: 80%;
+  }
+  .msg.ai {
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+  }
+  .msg.user {
+    background: var(--lime);
+    color: #000;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+    font-weight: 500;
+  }
+  .msg .who {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--lime);
+    margin-bottom: 4px;
+    display: block;
+  }
+  .msg.user .who { color: rgba(0,0,0,0.5); }
+
+  /* Streak viz */
+  .streak-grid {
+    display: grid;
+    grid-template-columns: repeat(14, 1fr);
+    gap: 4px;
+  }
+  .streak-cell {
+    aspect-ratio: 1;
+    background: var(--line);
+    border-radius: 3px;
+  }
+  .streak-cell.l1 { background: rgba(163,230,53,0.25); }
+  .streak-cell.l2 { background: rgba(163,230,53,0.5); }
+  .streak-cell.l3 { background: rgba(163,230,53,0.75); }
+  .streak-cell.l4 { background: var(--lime); box-shadow: 0 0 8px rgba(163,230,53,0.5); }
+
+  /* ============================
+     HOW IT WORKS — 3 steps
+     ============================ */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 48px;
+  }
+  @media (max-width: 800px) { .steps { grid-template-columns: 1fr; } }
+  .step {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 32px;
+    position: relative;
+  }
+  .step .step-num {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 64px;
+    font-weight: 700;
+    letter-spacing: -0.05em;
+    color: var(--lime);
+    line-height: 1;
+    margin-bottom: 24px;
+    opacity: 0.4;
+  }
+  .step h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+  .step p {
+    color: var(--ink-2);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* ============================
+     ECOSYSTEM INTEGRATION
+     ============================ */
+  .ecosystem {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 32px;
+    padding: 72px;
+    position: relative;
+    overflow: hidden;
+  }
+  @media (max-width: 800px) { .ecosystem { padding: 40px 28px; } }
+  .ecosystem::before {
+    content: '';
+    position: absolute;
+    width: 800px; height: 800px;
+    top: -300px; right: -300px;
+    background: radial-gradient(circle, var(--lime-soft) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .eco-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 64px;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+  @media (max-width: 800px) { .eco-grid { grid-template-columns: 1fr; gap: 40px; } }
+  .eco-text h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(32px, 4.5vw, 52px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-bottom: 20px;
+  }
+  .eco-text p {
+    color: var(--ink-2);
+    font-size: 16px;
+    line-height: 1.6;
+    max-width: 480px;
+  }
+  .eco-diagram {
+    position: relative;
+    aspect-ratio: 1.2/1;
+  }
+  .eco-svg { width: 100%; height: 100%; }
+  .eco-node {
+    fill: var(--surface-2);
+    stroke: var(--line-2);
+    stroke-width: 1;
+  }
+  .eco-node.center { fill: var(--lime); stroke: var(--lime-2); }
+  .eco-line {
+    stroke: var(--line-2);
+    stroke-width: 1;
+    fill: none;
+    stroke-dasharray: 3 3;
+  }
+  .eco-line.active { stroke: var(--lime); stroke-dasharray: 0; }
+
+  /* ============================
+     PARTNERS / Layer 3
+     ============================ */
+  .partners-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+  @media (max-width: 800px) { .partners-grid { grid-template-columns: repeat(2, 1fr); } }
+  .partner-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 24px;
+    transition: all 0.25s;
+  }
+  .partner-card:hover {
+    border-color: var(--lime);
+    background: var(--surface-2);
+  }
+  .partner-card .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-3);
+    margin-bottom: 12px;
+  }
+  .partner-card svg {
+    width: 28px; height: 28px;
+    color: var(--lime);
+    margin-bottom: 16px;
+  }
+  .partner-card .name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    color: var(--ink);
+    font-size: 15px;
+    margin-bottom: 4px;
+  }
+  .partner-card .meta {
+    font-size: 12px;
+    color: var(--ink-3);
+  }
+
+  /* ============================
+     RATINGS
+     ============================ */
+  .ratings {
+    background: var(--surface);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: 64px 0;
+  }
+  .ratings-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 64px;
+    align-items: center;
+  }
+  @media (max-width: 800px) { .ratings-grid { grid-template-columns: 1fr; gap: 40px; } }
+  .ratings-score {
+    text-align: left;
+  }
+  .ratings-score .big {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(64px, 8vw, 96px);
+    font-weight: 700;
+    letter-spacing: -0.05em;
+    line-height: 0.9;
+    margin-bottom: 12px;
+  }
+  .ratings-score .big .accent { color: var(--lime); }
+  .ratings-score .stars {
+    color: var(--lime);
+    font-size: 20px;
+    margin-bottom: 8px;
+    letter-spacing: 4px;
+  }
+  .ratings-score .count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+  }
+  .reviews {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+  @media (max-width: 600px) { .reviews { grid-template-columns: 1fr; } }
+  .review {
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 20px;
+  }
+  .review .stars-row { color: var(--lime); margin-bottom: 10px; font-size: 13px; letter-spacing: 2px; }
+  .review .text {
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+  .review .who {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+
+  /* ============================
+     PRICING (subscription)
+     ============================ */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    max-width: 800px;
+    margin: 48px auto 0;
+  }
+  @media (max-width: 700px) { .pricing-grid { grid-template-columns: 1fr; } }
+  .plan {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    padding: 36px;
+    position: relative;
+  }
+  .plan.featured {
+    background: linear-gradient(135deg, var(--surface-2) 0%, var(--surface) 100%);
+    border: 1px solid var(--lime);
+    box-shadow: 0 30px 60px rgba(163,230,53,0.1);
+  }
+  .plan .badge {
+    position: absolute;
+    top: -10px; left: 24px;
+    background: var(--lime);
+    color: #000;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .plan h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+  }
+  .plan .price {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--ink-3);
+    margin-bottom: 4px;
+    letter-spacing: -0.03em;
+  }
+  .plan .price.tbd { font-size: 24px; }
+  .plan .price-note {
+    font-size: 12px;
+    color: var(--ink-3);
+    font-style: italic;
+    margin-bottom: 24px;
+  }
+  .plan ul {
+    list-style: none;
+    margin-bottom: 24px;
+    border-top: 1px solid var(--line);
+    padding-top: 20px;
+  }
+  .plan li {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 8px 0;
+    font-size: 14px;
+    color: var(--ink);
+  }
+  .plan li svg { color: var(--lime); flex-shrink: 0; margin-top: 3px; }
+
+  /* ============================
+     FINAL CTA
+     ============================ */
+  .final {
+    padding: 140px 0 120px;
+    position: relative;
+  }
+  .final-card {
+    background: linear-gradient(135deg, var(--surface-2) 0%, var(--bg-2) 100%);
+    border: 1px solid var(--line-2);
+    border-radius: 32px;
+    padding: 88px 64px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  @media (max-width: 700px) { .final-card { padding: 60px 28px; } }
+  .final-card::before {
+    content: '';
+    position: absolute;
+    width: 800px; height: 800px;
+    top: -300px; left: 50%; transform: translateX(-50%);
+    background: radial-gradient(circle, var(--lime-soft) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .final-card h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(40px, 6vw, 88px);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 0.92;
+    margin-bottom: 24px;
+    position: relative;
+  }
+  .final-card p {
+    color: var(--ink-2);
+    font-size: 18px;
+    margin-bottom: 40px;
+    max-width: 540px;
+    margin-left: auto; margin-right: auto;
+    position: relative;
+  }
+  .final-cta {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    flex-wrap: wrap;
+    position: relative;
+  }
+
+  /* ============================
+     FOOTER
+     ============================ */
+  footer {
+    padding: 64px 0 32px;
+    border-top: 1px solid var(--line);
+  }
+  .footer-grid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 32px;
+    font-size: 13px;
+    color: var(--ink-3);
+  }
+  .footer-links { display: flex; gap: 32px; }
+  .footer-links a { color: var(--ink-2); transition: color 0.15s; }
+  .footer-links a:hover { color: var(--lime); }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+
+</style>
+</head>
+<body>
+
+<!-- BG ORBS -->
+<div class="bg-orbs">
+  <div class="orb lime"></div>
+  <div class="orb orange"></div>
+  <div class="orb cyan"></div>
+</div>
+
+<!-- RIBBON -->
+<div class="ribbon">
+  MAKIETA #2 · satellite product · AI recovery app
+  <a href="index.html">← wróć do design thinking output</a>
+  <a href="makieta.html">↗ zobacz makietę #1</a>
+</div>
+
+<!-- NAV -->
+<nav class="top">
+  <div class="container nav-inner">
+    <div class="logo">
+      <div class="logo-mark">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+      </div>
+      <span class="brand">FORM</span>
+      <span class="powered">by znany.pl</span>
+    </div>
+    <ul>
+      <li><a href="#features">Funkcje</a></li>
+      <li><a href="#how">Jak działa</a></li>
+      <li><a href="#ecosystem">Ekosystem</a></li>
+      <li><a href="#pricing">Cennik</a></li>
+    </ul>
+    <button class="btn">Pobierz</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div class="reveal">
+        <div class="hero-tag">
+          <span class="dot"></span>
+          recovery coach · powered by ai
+        </div>
+        <h1>
+          <span class="line">Trening<span class="dot">.</span></span>
+          <span class="line">Recovery<span class="dot">.</span></span>
+          <span class="line"><span class="serif-i">Twoje dane.</span></span>
+        </h1>
+        <p class="lead">FORM łączy twój program z <strong>siecią partnerów regeneracji</strong>, twoim trenerem 1:1 i danymi z urządzeń wearable. Wie kiedy push'ować, a kiedy odpuścić — zanim ty się zorientujesz.</p>
+
+        <div class="hero-cta">
+          <a class="store-btn" href="#">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+            <div>
+              <div class="top">Pobierz z</div>
+              <div class="name">App Store</div>
+            </div>
+          </a>
+          <a class="store-btn" href="#">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 0 1-.61-.92V2.734a1 1 0 0 1 .609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.198l2.807 1.626a1 1 0 0 1 0 1.73l-2.808 1.626L15.206 12l2.492-2.491zM5.864 2.658L16.802 8.99l-2.302 2.302-8.636-8.634z"/></svg>
+            <div>
+              <div class="top">Pobierz z</div>
+              <div class="name">Google Play</div>
+            </div>
+          </a>
+        </div>
+
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="v"><span class="accent">4.9</span>/5</div>
+            <div class="k">App Store</div>
+          </div>
+          <div class="hero-stat">
+            <div class="v"><span class="accent">12k</span>+</div>
+            <div class="k">Aktywnych użytkowników</div>
+          </div>
+          <div class="hero-stat">
+            <div class="v"><span class="accent">38</span>%</div>
+            <div class="k">Lepsze recovery score</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PHONE STAGE -->
+      <div class="reveal">
+        <div class="phone-stage">
+          <!-- side phone 2 -->
+          <div class="phone side-2">
+            <div class="screen booking">
+              <div class="status">
+                <span>9:41</span>
+                <div class="dots"><span></span><span></span><span></span></div>
+              </div>
+              <div class="booking-title">Trening dziś</div>
+              <div class="workout-hero">
+                <div class="tag">PUSH · 45 MIN</div>
+                <div class="title">Górne partie</div>
+              </div>
+              <div class="booking-card">
+                <div class="head">
+                  <span>Recovery</span>
+                  <span>—</span>
+                </div>
+                <div class="meta">20 min · mobility</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- side phone (right) -->
+          <div class="phone side">
+            <div class="screen booking">
+              <div class="status">
+                <span>9:41</span>
+                <div class="dots"><span></span><span></span><span></span></div>
+              </div>
+              <div class="booking-title">Wellness partners</div>
+              <div class="booking-card active">
+                <div class="head">
+                  <span>Recovery massage</span>
+                  <span class="price">180 zł</span>
+                </div>
+                <div class="meta">Warszawa · jutro 14:00</div>
+              </div>
+              <div class="booking-card">
+                <div class="head">
+                  <span>Hydration boost</span>
+                  <span class="price">250 zł</span>
+                </div>
+                <div class="meta">Warszawa · pt. 10:00</div>
+              </div>
+              <div class="booking-card">
+                <div class="head">
+                  <span>Mobility 1:1</span>
+                  <span class="price">120 zł</span>
+                </div>
+                <div class="meta">online · sob. 8:00</div>
+              </div>
+              <div class="booking-card">
+                <div class="head">
+                  <span>Sen consult</span>
+                  <span class="price">200 zł</span>
+                </div>
+                <div class="meta">online · ndz. 19:00</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- main phone -->
+          <div class="phone main">
+            <div class="screen">
+              <div class="status">
+                <span>9:41</span>
+                <div class="dots"><span></span><span></span><span></span></div>
+              </div>
+              <div class="screen-header">
+                <div class="hi">Cześć, Ola</div>
+                <div class="name">Recovery dziś</div>
+              </div>
+              <div class="score-ring">
+                <svg viewBox="0 0 100 100">
+                  <circle class="ring-bg" cx="50" cy="50" r="42"/>
+                  <circle class="ring-fg" cx="50" cy="50" r="42"
+                    stroke-dasharray="263.89"
+                    stroke-dashoffset="58"/>
+                </svg>
+                <div class="inner">
+                  <div class="num">78</div>
+                  <div class="label">/ 100</div>
+                </div>
+              </div>
+              <div class="score-rows">
+                <div class="score-row">
+                  <span class="k">Sen</span>
+                  <span class="v good">7h 42m</span>
+                </div>
+                <div class="score-row">
+                  <span class="k">HRV</span>
+                  <span class="v good">65 ms</span>
+                </div>
+                <div class="score-row">
+                  <span class="k">Tętno spoczynkowe</span>
+                  <span class="v">52 bpm</span>
+                </div>
+                <div class="score-row">
+                  <span class="k">Nawodnienie</span>
+                  <span class="v warn">68%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Floating chips -->
+          <div class="float-chip top-right">
+            <div class="ico">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            </div>
+            <div>
+              <span class="v">+18%</span>
+              <span class="k">HRV / 30dni</span>
+            </div>
+          </div>
+          <div class="float-chip bottom-left">
+            <div class="ico">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+            </div>
+            <div>
+              <span class="v">42</span>
+              <span class="k">dni streak</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="block" id="features">
+  <div class="container">
+    <div class="reveal">
+      <div class="eyebrow">funkcje // 01</div>
+      <h2 class="section-title">Cztery rzeczy, które robi <span class="serif-i">FORM</span></h2>
+      <p class="section-sub">Bez bullshit list 47 feature'ów. Cztery zadania, każde rozwiązane do końca.</p>
+    </div>
+
+    <div class="features-grid reveal">
+      <div class="feature">
+        <div class="num">01 // RECOVERY</div>
+        <h3>Mierzy twoje recovery score</h3>
+        <p>Integruje dane z wearables (Apple Watch, Garmin, Whoop, Oura) i daje ci jedną liczbę — wiesz czy push'ować, czy odpuścić.</p>
+        <div class="feature-viz">
+          <div class="chart-bar">
+            <div class="b" style="height: 60%"></div>
+            <div class="b" style="height: 70%"></div>
+            <div class="b lime" style="height: 85%"></div>
+            <div class="b" style="height: 65%"></div>
+            <div class="b lime" style="height: 92%"></div>
+            <div class="b" style="height: 75%"></div>
+            <div class="b lime" style="height: 78%"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="feature">
+        <div class="num">02 // BOOKING</div>
+        <h3>Rezerwacja sieci wellness</h3>
+        <p>Recovery, mobilność, suplementacja, konsultacje snu — wszystko od zweryfikowanych partnerów znany.pl, automatyczna rezerwacja przez aplikację.</p>
+        <div class="feature-viz">
+          <div class="booking-list">
+            <div class="book-item active">
+              <div>
+                <div class="name">Recovery massage</div>
+                <div class="meta">Warszawa · jutro 14:00</div>
+              </div>
+              <div class="price">180 zł</div>
+            </div>
+            <div class="book-item">
+              <div>
+                <div class="name">Mobility 1:1</div>
+                <div class="meta">online · sob. 8:00</div>
+              </div>
+              <div class="price">120 zł</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="feature">
+        <div class="num">03 // AI COACH</div>
+        <h3>AI rozumie kontekst</h3>
+        <p>Nie generyczne porady. AI zna twój program, twojego trenera, twoje dane biologiczne i historię. Pyta, doprecyzowuje, pamięta.</p>
+        <div class="feature-viz">
+          <div class="chat">
+            <div class="msg ai">
+              <span class="who">FORM AI</span>
+              Twój HRV spadł 12% w nocy. Polecam dziś mobility zamiast HIIT — zarezerwować sesję 1:1?
+            </div>
+            <div class="msg user">
+              <span class="who">Ola</span>
+              Tak, gdzie najbliżej?
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="feature">
+        <div class="num">04 // PROGRAM</div>
+        <h3>Łączy się z twoim programem</h3>
+        <p>Jeśli jesteś w kohorcie ania.znany.pl albo innej — FORM pobiera plan, śledzi trening, przekazuje dane trenerowi-kuratorowi.</p>
+        <div class="feature-viz">
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:13px;">
+              <span style="font-family: 'Space Grotesk',sans-serif; font-weight:600;">42 / 56 treningów</span>
+              <span class="mono" style="font-size:11px; color: var(--ink-3);">75%</span>
+            </div>
+            <div style="height:8px; background: var(--line); border-radius:100px; overflow:hidden;">
+              <div style="width:75%; height:100%; background: linear-gradient(90deg, var(--lime) 0%, var(--lime-2) 100%); box-shadow: 0 0 12px rgba(163,230,53,0.5);"></div>
+            </div>
+            <div class="streak-grid">
+              <div class="streak-cell l4"></div><div class="streak-cell l3"></div><div class="streak-cell l4"></div><div class="streak-cell l2"></div><div class="streak-cell l4"></div><div class="streak-cell l3"></div><div class="streak-cell l4"></div>
+              <div class="streak-cell l4"></div><div class="streak-cell l4"></div><div class="streak-cell l3"></div><div class="streak-cell l4"></div><div class="streak-cell l4"></div><div class="streak-cell l2"></div><div class="streak-cell l4"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="block" id="how">
+  <div class="container">
+    <div class="reveal">
+      <div class="eyebrow">jak działa // 02</div>
+      <h2 class="section-title">Trzy kroki — <span class="serif-i">i już jedziesz</span></h2>
+    </div>
+    <div class="steps reveal">
+      <div class="step">
+        <div class="step-num">01</div>
+        <h3>Połącz wearable</h3>
+        <p>Apple Watch, Garmin, Whoop, Oura, Fitbit — jednym tapem. Dane spływają w czasie rzeczywistym.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <h3>Wpnij program</h3>
+        <p>Jesteś w kohorcie znany.pl? Login → plan i grupa już wbudowane. Brak kohorty? FORM zaproponuje plan AI.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <h3>Pozwól mierzyć</h3>
+        <p>Po 7 dniach FORM wie więcej o twoim ciele niż twój trener. Po 30 — wie co robić zanim ty się zorientujesz.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ECOSYSTEM -->
+<section class="block" id="ecosystem">
+  <div class="container">
+    <div class="ecosystem reveal">
+      <div class="eco-grid">
+        <div class="eco-text">
+          <div class="eyebrow">ekosystem // 03</div>
+          <h3>FORM siedzi <span class="serif-i">w środku</span> wszystkiego</h3>
+          <p>Twój program treningowy, twój trener 1:1, sieć partnerów wellness, twoje dane biologiczne — wszystko trafia do jednej apki i wraca do ciebie jako konkretna decyzja.</p>
+        </div>
+        <div class="eco-diagram">
+          <svg class="eco-svg" viewBox="0 0 400 360">
+            <!-- lines -->
+            <line class="eco-line active" x1="200" y1="180" x2="80" y2="80"/>
+            <line class="eco-line active" x1="200" y1="180" x2="320" y2="80"/>
+            <line class="eco-line active" x1="200" y1="180" x2="80" y2="280"/>
+            <line class="eco-line active" x1="200" y1="180" x2="320" y2="280"/>
+            <line class="eco-line" x1="200" y1="180" x2="200" y2="40"/>
+            <line class="eco-line" x1="200" y1="180" x2="200" y2="320"/>
+
+            <!-- outer nodes -->
+            <g>
+              <circle class="eco-node" cx="80" cy="80" r="36"/>
+              <text x="80" y="78" text-anchor="middle" font-family="Space Grotesk" font-size="11" font-weight="600" fill="#fafafa">Program</text>
+              <text x="80" y="92" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#9da5b4">kurs</text>
+            </g>
+            <g>
+              <circle class="eco-node" cx="320" cy="80" r="36"/>
+              <text x="320" y="78" text-anchor="middle" font-family="Space Grotesk" font-size="11" font-weight="600" fill="#fafafa">Trener 1:1</text>
+              <text x="320" y="92" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#9da5b4">warstwa 2</text>
+            </g>
+            <g>
+              <circle class="eco-node" cx="80" cy="280" r="36"/>
+              <text x="80" y="278" text-anchor="middle" font-family="Space Grotesk" font-size="11" font-weight="600" fill="#fafafa">Wellness</text>
+              <text x="80" y="292" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#9da5b4">warstwa 3</text>
+            </g>
+            <g>
+              <circle class="eco-node" cx="320" cy="280" r="36"/>
+              <text x="320" y="278" text-anchor="middle" font-family="Space Grotesk" font-size="11" font-weight="600" fill="#fafafa">Wearable</text>
+              <text x="320" y="292" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#9da5b4">dane bio</text>
+            </g>
+            <g>
+              <circle class="eco-node" cx="200" cy="40" r="30" opacity="0.5"/>
+              <text x="200" y="44" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#5d6573">soon</text>
+            </g>
+            <g>
+              <circle class="eco-node" cx="200" cy="320" r="30" opacity="0.5"/>
+              <text x="200" y="324" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#5d6573">soon</text>
+            </g>
+
+            <!-- center -->
+            <circle cx="200" cy="180" r="52" fill="#a3e635" filter="drop-shadow(0 0 12px rgba(163,230,53,0.6))"/>
+            <text x="200" y="183" text-anchor="middle" font-family="Space Grotesk" font-size="20" font-weight="700" fill="#000">FORM</text>
+            <text x="200" y="200" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="rgba(0,0,0,0.6)" letter-spacing="1">AI · CORE</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PARTNERS -->
+<section class="block">
+  <div class="container">
+    <div class="reveal">
+      <div class="eyebrow">sieć // 04</div>
+      <h2 class="section-title">Wellness partners — <span class="serif-i">w twoim mieście</span></h2>
+      <p class="section-sub">Każdy partner zweryfikowany przez znany.pl. Zniżki dla użytkowników FORM. Rezerwacja w 2 tapy.</p>
+    </div>
+
+    <div class="partners-grid reveal">
+      <div class="partner-card">
+        <div class="num">01</div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8 8 6 11 6 14a6 6 0 0 0 12 0c0-3-2-6-6-12z"/></svg>
+        <div class="name">Regeneracja</div>
+        <div class="meta">12 gabinetów · 5 miast</div>
+      </div>
+      <div class="partner-card">
+        <div class="num">02</div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        <div class="name">Recovery</div>
+        <div class="meta">18 gabinetów · 7 miast</div>
+      </div>
+      <div class="partner-card">
+        <div class="num">03</div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M6.5 6.5l11 11"/></svg>
+        <div class="name">Suplementacja</div>
+        <div class="meta">8 ekspertów · online</div>
+      </div>
+      <div class="partner-card">
+        <div class="num">04</div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <div class="name">Sen i regeneracja</div>
+        <div class="meta">6 doradców · online</div>
+      </div>
+      <div class="partner-card">
+        <div class="num">05</div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        <div class="name">Mobility</div>
+        <div class="meta">22 trenerów · 6 miast</div>
+      </div>
+      <div class="partner-card">
+        <div class="num">06</div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M2 12h4M18 12h4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+        <div class="name">Wellness</div>
+        <div class="meta">14 klinik · 5 miast</div>
+      </div>
+      <div class="partner-card">
+        <div class="num">07</div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h18"/><path d="M12 3v18"/><circle cx="12" cy="12" r="9"/></svg>
+        <div class="name">Dietetyka</div>
+        <div class="meta">11 dietetyków · online</div>
+      </div>
+      <div class="partner-card">
+        <div class="num">08</div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M10 4v16"/><path d="M2 10h8"/></svg>
+        <div class="name">Fizjoterapia</div>
+        <div class="meta">16 fizjoterapeutów · 8 miast</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RATINGS -->
+<div class="ratings">
+  <div class="container">
+    <div class="ratings-grid reveal">
+      <div class="ratings-score">
+        <div class="eyebrow" style="margin-bottom: 16px;">ratings // 05</div>
+        <div class="big"><span class="accent">4.9</span><span style="color: var(--ink-3); font-size: 0.5em;">/5</span></div>
+        <div class="stars">★ ★ ★ ★ ★</div>
+        <div class="count">3,847 recenzji · App Store + Google Play</div>
+      </div>
+      <div class="reviews">
+        <div class="review">
+          <div class="stars-row">★ ★ ★ ★ ★</div>
+          <div class="text">"Pierwsza apka, która naprawdę zna kontekst — wiedziała kiedy mam okres i sama proponuje lżejsze treningi. Magia."</div>
+          <div class="who">— ola_k · 2 tyg. temu</div>
+        </div>
+        <div class="review">
+          <div class="stars-row">★ ★ ★ ★ ★</div>
+          <div class="text">"Booking partnerów wellness przez apkę to game changer. Zamiast szukać w Google, klikam i jadę."</div>
+          <div class="who">— mfit2024 · 1 mc temu</div>
+        </div>
+        <div class="review">
+          <div class="stars-row">★ ★ ★ ★ ★</div>
+          <div class="text">"Integracja z moim programem była dosłownie one-tap. AI coach pyta sensowne pytania, nie generyczne."</div>
+          <div class="who">— kasia.w · 3 tyg. temu</div>
+        </div>
+        <div class="review">
+          <div class="stars-row">★ ★ ★ ★ ☆</div>
+          <div class="text">"Brakuje mi jeszcze Garmin Connect direct sync, ale poza tym najlepsza apka recovery jaką testowałam."</div>
+          <div class="who">— annaruns · 5 dni temu</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PRICING -->
+<section class="block" id="pricing">
+  <div class="container">
+    <div class="reveal" style="text-align:center;">
+      <div class="eyebrow" style="justify-content:center;">cennik // 06</div>
+      <h2 class="section-title" style="margin: 0 auto;">Subskrypcja <span class="serif-i">prosta</span></h2>
+      <p class="section-sub" style="margin-left:auto; margin-right:auto; text-align:center;">Free forever. Pro odblokowuje AI coach + booking + integrację z programem.</p>
+    </div>
+
+    <div class="pricing-grid reveal">
+      <div class="plan">
+        <h3>FREE</h3>
+        <div class="price">0 zł</div>
+        <div class="price-note">zawsze</div>
+        <ul>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Tracking treningów</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Recovery score (basic)</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>1 wearable</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Historia 30 dni</li>
+        </ul>
+        <button class="btn dark" style="width:100%; justify-content:center;">Pobierz za darmo</button>
+      </div>
+
+      <div class="plan featured">
+        <div class="badge">// najpopularniejszy</div>
+        <h3>PRO</h3>
+        <div class="price tbd">cena do ustalenia</div>
+        <div class="price-note">subskrypcja miesięczna / roczna</div>
+        <ul>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Wszystko z FREE</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>AI coach z pamięcią kontekstu</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Booking partnerów wellness</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Integracja z programami znany.pl</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Wszystkie wearables</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Historia bez limitu + export</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Zniżki u partnerów wellness</li>
+        </ul>
+        <button class="btn big" style="width:100%; justify-content:center;">Zacznij 7 dni za darmo</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final">
+  <div class="container">
+    <div class="final-card reveal">
+      <h2>
+        Twoje ciało <span class="serif-i">już mówi</span>.<br>
+        FORM po prostu słucha.
+      </h2>
+      <p>Pobierz teraz. Pierwsze 7 dni Pro za darmo. Brak karty, brak haczyków.</p>
+      <div class="final-cta">
+        <a class="store-btn" href="#">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09z"/></svg>
+          <div>
+            <div class="top">Pobierz z</div>
+            <div class="name">App Store</div>
+          </div>
+        </a>
+        <a class="store-btn" href="#">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 0 1-.61-.92V2.734a1 1 0 0 1 .609-.92z"/></svg>
+          <div>
+            <div class="top">Pobierz z</div>
+            <div class="name">Google Play</div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container footer-grid">
+    <div>
+      <div class="logo">
+        <div class="logo-mark">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        </div>
+        <span class="brand">FORM</span>
+        <span class="powered">by znany.pl</span>
+      </div>
+      <div style="margin-top: 12px; font-size: 12px; color: var(--ink-3);" class="mono">satellite product · znany.pl ecosystem</div>
+    </div>
+    <div class="footer-links">
+      <a href="#">Regulamin</a>
+      <a href="#">Polityka prywatności</a>
+      <a href="#">Status</a>
+      <a href="#">Kontakt</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+  reveals.forEach(r => io.observe(r));
+</script>
+
+</body>
+</html>

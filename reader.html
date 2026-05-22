@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reader · znany.trener — dokumenty strategiczne</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fafaf9;
+    --surface: #ffffff;
+    --ink: #0a0a0a;
+    --ink-2: #404040;
+    --ink-3: #737373;
+    --line: #e7e5e4;
+    --line-2: #d6d3d1;
+    --accent: #047857;
+    --accent-soft: #d1fae5;
+    --gold: #b45309;
+    --gold-soft: #fef3c7;
+    --navy: #0c1a3a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  ::selection { background: var(--accent); color: white; }
+
+  /* ============================
+     LAYOUT
+     ============================ */
+  .layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    min-height: 100vh;
+  }
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+  }
+
+  /* ============================
+     SIDEBAR
+     ============================ */
+  aside {
+    background: var(--surface);
+    border-right: 1px solid var(--line);
+    padding: 28px 20px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  @media (max-width: 900px) {
+    aside { position: relative; height: auto; border-right: none; border-bottom: 1px solid var(--line); }
+  }
+  .side-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--ink-3);
+    text-decoration: none;
+    padding: 8px 10px;
+    border-radius: 8px;
+    transition: background 0.15s, color 0.15s;
+    margin-bottom: 24px;
+  }
+  .side-back:hover { background: var(--bg); color: var(--ink); }
+  .side-brand {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    font-size: 20px;
+    margin-bottom: 4px;
+    padding: 0 10px;
+  }
+  .side-brand .dot { color: var(--accent); }
+  .side-tagline {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    padding: 0 10px;
+    margin-bottom: 32px;
+  }
+  .side-section-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--ink-3);
+    font-weight: 600;
+    padding: 0 10px;
+    margin-bottom: 12px;
+    margin-top: 24px;
+  }
+  .side-nav {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .side-nav a {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 12px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: var(--ink-2);
+    transition: background 0.15s, color 0.15s;
+    border: 1px solid transparent;
+  }
+  .side-nav a:hover { background: var(--bg); color: var(--ink); }
+  .side-nav a.active {
+    background: var(--accent-soft);
+    color: var(--ink);
+    border-color: var(--accent);
+  }
+  .side-nav .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-3);
+    margin-top: 2px;
+    flex-shrink: 0;
+    font-weight: 500;
+  }
+  .side-nav a.active .num { color: var(--accent); font-weight: 700; }
+  .side-nav .doc-title {
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+    margin-bottom: 2px;
+  }
+  .side-nav .doc-desc {
+    font-size: 12px;
+    color: var(--ink-3);
+    line-height: 1.4;
+  }
+
+  /* ============================
+     MAIN
+     ============================ */
+  main {
+    padding: 0;
+    overflow-x: hidden;
+  }
+  .doc-wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 64px 32px 120px;
+  }
+  @media (max-width: 700px) { .doc-wrap { padding: 40px 20px 80px; } }
+
+  /* Top meta */
+  .doc-meta {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--ink-3);
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 40px;
+  }
+  .doc-meta .filename {
+    background: var(--gold-soft);
+    color: var(--gold);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-weight: 600;
+  }
+
+  /* ============================
+     RENDERED MARKDOWN
+     ============================ */
+  .md {
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--ink-2);
+  }
+  .md h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(36px, 5vw, 52px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    color: var(--ink);
+    margin-bottom: 32px;
+    margin-top: 0;
+  }
+  .md h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    color: var(--ink);
+    margin-top: 56px;
+    margin-bottom: 20px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+  }
+  .md h2:first-child { border-top: none; padding-top: 0; margin-top: 0; }
+  .md h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin-top: 36px;
+    margin-bottom: 12px;
+  }
+  .md h4 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-top: 24px;
+    margin-bottom: 8px;
+  }
+  .md p {
+    margin-bottom: 18px;
+    color: var(--ink-2);
+  }
+  .md strong {
+    color: var(--ink);
+    font-weight: 700;
+  }
+  .md em {
+    font-style: italic;
+    color: var(--ink-2);
+  }
+  .md a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-color: rgba(4,120,87,0.3);
+    text-underline-offset: 2px;
+  }
+  .md a:hover { text-decoration-color: var(--accent); }
+  .md ul, .md ol {
+    margin-bottom: 20px;
+    padding-left: 24px;
+  }
+  .md li {
+    margin-bottom: 8px;
+    color: var(--ink-2);
+  }
+  .md li::marker { color: var(--accent); }
+  .md hr {
+    border: none;
+    border-top: 1px solid var(--line);
+    margin: 48px 0;
+  }
+  .md blockquote {
+    border-left: 3px solid var(--accent);
+    padding: 4px 0 4px 20px;
+    margin: 24px 0;
+    color: var(--ink);
+    font-style: italic;
+    background: var(--accent-soft);
+    padding: 16px 20px;
+    border-radius: 0 8px 8px 0;
+  }
+  .md code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.88em;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 1px 6px;
+    color: var(--ink);
+  }
+  .md pre {
+    background: var(--ink);
+    color: #fafafa;
+    padding: 20px 24px;
+    border-radius: 12px;
+    overflow-x: auto;
+    margin: 20px 0;
+  }
+  .md pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    color: inherit;
+    font-size: 13px;
+  }
+
+  /* Tables */
+  .md table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 24px 0;
+    font-size: 14px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .md th {
+    background: var(--bg);
+    text-align: left;
+    padding: 12px 16px;
+    font-weight: 700;
+    color: var(--ink);
+    font-size: 13px;
+    border-bottom: 1px solid var(--line);
+  }
+  .md td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink-2);
+    vertical-align: top;
+  }
+  .md tr:last-child td { border-bottom: none; }
+  .md td strong { color: var(--ink); }
+
+  /* Footer nav between docs */
+  .doc-pagination {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 64px;
+    padding-top: 32px;
+    border-top: 1px solid var(--line);
+  }
+  @media (max-width: 600px) { .doc-pagination { grid-template-columns: 1fr; } }
+  .pag-link {
+    display: block;
+    padding: 20px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.15s;
+  }
+  .pag-link:hover { border-color: var(--accent); background: var(--bg); transform: translateY(-2px); }
+  .pag-link.next { text-align: right; }
+  .pag-link.disabled { opacity: 0.3; pointer-events: none; }
+  .pag-link .pag-dir {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--ink-3);
+    margin-bottom: 6px;
+  }
+  .pag-link .pag-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside>
+    <a href="index.html" class="side-back">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Wróć do design thinking output
+    </a>
+    <div class="side-brand">znany<span class="dot">.</span>trener</div>
+    <div class="side-tagline">// dokumenty strategiczne</div>
+
+    <div class="side-section-label">Faza 1 · empatia</div>
+    <ul class="side-nav">
+      <li>
+        <a href="#ideas" data-doc="ideas">
+          <span class="num">01</span>
+          <div>
+            <div class="doc-title">Koncepcja zrewidowana</div>
+            <div class="doc-desc">Co robimy, czego NIE robimy</div>
+          </div>
+        </a>
+      </li>
+    </ul>
+
+    <div class="side-section-label">Faza 2 · definiowanie</div>
+    <ul class="side-nav">
+      <li>
+        <a href="#wybor" data-doc="wybor">
+          <span class="num">02</span>
+          <div>
+            <div class="doc-title">Wybór wertykalu</div>
+            <div class="doc-desc">Trener vs dietetyk vs fizjo</div>
+          </div>
+        </a>
+      </li>
+    </ul>
+
+    <div class="side-section-label">Faza 3 · ideacja</div>
+    <ul class="side-nav">
+      <li>
+        <a href="#pilot" data-doc="pilot">
+          <span class="num">03</span>
+          <div>
+            <div class="doc-title">Propozycja pilotu</div>
+            <div class="doc-desc">Model, ekonomia, sekwencja</div>
+          </div>
+        </a>
+      </li>
+    </ul>
+
+    <div class="side-section-label">Faza 4 · prototyp</div>
+    <ul class="side-nav">
+      <li>
+        <a href="makieta.html">
+          <span class="num">M1</span>
+          <div>
+            <div class="doc-title">Makieta: ania.znany.pl</div>
+            <div class="doc-desc">Kohorta + recovery</div>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a href="makieta2.html">
+          <span class="num">M2</span>
+          <div>
+            <div class="doc-title">Makieta: FORM</div>
+            <div class="doc-desc">AI recovery app</div>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a href="makieta3.html">
+          <span class="num">M3</span>
+          <div>
+            <div class="doc-title">Makieta: studio</div>
+            <div class="doc-desc">B2B dla twórców</div>
+          </div>
+        </a>
+      </li>
+    </ul>
+  </aside>
+
+  <!-- MAIN -->
+  <main>
+    <div class="doc-wrap">
+      <div class="doc-meta">
+        <span class="filename" id="docFilename">ideas.md</span>
+        <span id="docPhase">faza 1 · empatia</span>
+      </div>
+      <article class="md" id="content"></article>
+      <nav class="doc-pagination" id="pagination"></nav>
+    </div>
+  </main>
+
+</div>
+
+<!-- MARKDOWN SOURCES (embedded to avoid CORS on file://) -->
+<script id="md-ideas" type="text/markdown">
+# znany.pl
+
+**Co robimy:** operujemy produkty cyfrowe (kursy/programy/aplikacje) wspólnie z jednym influencerem i jednym specjalistą na projekt. Influencer daje zasięg i twarz, specjalista daje merytorykę i zgodność prawną, my robimy produkt i operacje.
+
+To nie jest platforma. To studio, które wypuszcza pojedyncze produkty pod nazwiskiem influencera. **Z czasem** — jeśli pierwsze 3–5 projektów w tym samym wertykalu wypali — pojawi się sieć specjalistów i wtedy można rozważać marketplace. Nie odwrotnie.
+
+---
+
+## Pierwszy projekt (pilot)
+
+**Jeden wertykal, jeden influencer, jeden specjalista, jeden produkt.** Bez rozmów o sieci, bez rozmów o pakietach, bez rozmów o "search w erze AI".
+
+Założenia pilotu:
+- Wertykal wybrany pod realny popyt i znośne ryzyko regulacyjne (kandydaci do dyskusji: trener personalny, dietetyk, fizjo). Wybór = osobna decyzja, nie zakładamy z góry.
+- Influencer z **udokumentowanym** zasięgiem konwertującym (nie samo follower count — sprzedaż wcześniejszych produktów albo affiliate).
+- Specjalista z uprawnieniami i CV, które wytrzyma audyt UOKiK.
+- Produkt: konkretny, ograniczony scope (np. 8-tygodniowy program), nie "platforma subskrypcyjna na lata".
+
+**Cel pilotu:** zwalidować jednostkową ekonomikę jednego projektu. Nic więcej.
+
+---
+
+## Dla kogo i co realnie dajemy
+
+**Influencer** — operacyjny partner, który zdejmuje z niego: produkcję produktu, fakturowanie, support, zgodność prawną, dietetyka/trenera firmującego. Time-to-market liczony w tygodniach. Brand pod jego nazwiskiem.
+
+*Czego NIE obiecujemy:* że produkt będzie sprzedawał się 5 lat po wygaszeniu jego zasięgu, że dostanie "pasywny royalty stream", że to jego "emerytura cyfrowa". Większość kursów cyfrowych traci sprzedaż w 18–24 miesiące bez ciągłego marketingu — i nasz pilot to potwierdzi lub obali, nie odwrotnie.
+
+**Specjalista** — płatne zlecenie za walidację merytoryczną + ewentualne sesje 1:1 z klientami, których produkt sam nie obsłuży. Płaska stawka lub revenue share od konkretnego projektu — do uzgodnienia per case.
+
+*Czego NIE obiecujemy:* że trafi do "sieci collaborative care", że dostanie strumień klientów z routingu, że poprowadzi "edycje grupowe pod marką aplikacji". To są hipotezy na potem, nie oferta dziś.
+
+**Klient końcowy** — produkt influencera z merytoryczną podkładką specjalisty z uprawnieniami. Ścieżka do 1:1 ze specjalistą jeśli potrzebna. Jasno oznaczone autorstwo i odpowiedzialność.
+
+---
+
+## Ekonomika
+
+Pilot rozliczany **per projekt**, nie jako "platform fee". Konkretny split do wynegocjowania, ale punkt wyjścia: studio bierze tyle, ile pokrywa koszty produkcji + marketingu performance + marżę operacyjną. Realnie to znacznie więcej niż 15% — pewnie 30–50% przy pierwszym projekcie, bo nie ma efektu skali ani powtarzalnego playbooka.
+
+Influencer akceptuje wyższy udział studia, **bo alternatywą jest 6 miesięcy budowania własnego teamu albo agencja, która i tak nie dowiezie merytoryki i compliance**. To jest realna value prop, nie "platforma".
+
+Po pilocie znana jest baza kosztowa i można sensownie rozmawiać o tym, ile zostaje dla influencera i specjalisty w kolejnych projektach.
+
+---
+
+## CEIDG i pozyskiwanie specjalistów
+
+CEIDG jest **narzędziem operacyjnym** do typowania specjalistów do kontaktu, nie produktem. Nie budujemy landingów-widmo dla 50 tys. trenerów bez ich zgody — to niska jakość danych (PKD są szerokie, brak certyfikatów, cen, opinii) i nie wygrywa z Booksy, znanylekarzem czy Fixly.
+
+Wykorzystanie CEIDG: lista do outboundu pod **konkretne** zapotrzebowanie ("aplikacja [influencera] potrzebuje fizjo w Trójmieście"). Outbound jest legitny, gdy mamy ofertę z płacącym klientem, nie zaproszenie do katalogu.
+
+---
+
+## Insight regulacyjny — jako value prop, nie moat
+
+UOKiK realnie karze za nieoznaczone reklamy i nieuprawnione doradztwo. To jest **uzasadnienie**, dlaczego influencer chce nas w teamie produktowym. Nie jest to obronny moat — kancelaria + dietetyk-firmant rozwiązują to za 5–10K/mies. flat. Konkurujemy o influencera value proposition, nie barierą wejścia.
+
+---
+
+## Czego NIE robimy (jeszcze)
+
+Wyrzucone z pierwotnej koncepcji, bo to spekulacje wymagające gęstości sieci, której nie mamy:
+
+- **Pakiety collaborative care** (oś 1) — wymagają ciężkiego case management i sieci specjalistów w wielu miastach. Pomysł zostaje w szufladzie, wraca po 5+ udanych projektach w wertykalu.
+- **Usługi grupowe pod marką aplikacji** (oś 2) — konflikt interesów z influencerem (jego brand, cudzy przychód). Realniej: specjalista buduje własny brand z portfolio współpracy.
+- **Wiele wertykałów równolegle** — najpierw jeden działa, potem drugi. Wertykalizacja jako koncept ok, jako równoległy GTM zabiera kapitał i fokus.
+- **AEO/GEO jako kanał** — może coś z tego będzie za 2–3 lata, dziś klient idzie z Google/Instagrama/poleceń. Performance marketing pod konkretny produkt influencera, nie "search w erze AI".
+- **Marketplace / katalog specjalistów** — wymaga dwustronnego popytu, którego nie ma. Sieć jest *konsekwencją* udanych projektów, nie warunkiem startowym.
+
+---
+
+## Decyzja zerojedynkowa
+
+Czy w ciągu 4–6 tygodni można zamknąć: jednego influencera z dowodem konwersji + jednego specjalistę z uprawnieniami + zarys produktu z liczbami (CAC, średni koszyk, marża)?
+
+Jeśli tak — robimy pilot, walidujemy ekonomikę jednego projektu, dopiero potem rozmawiamy o powtarzalności.
+Jeśli nie — koncepcja nie ma walidacji rynkowej i nie warto skalować pomysłu na siatkę i wertykały.
+</script>
+
+<script id="md-wybor" type="text/markdown">
+# Wybór wertykalu pod pilot
+
+Trzej kandydaci: trener personalny, dietetyk, fizjoterapeuta. Ocena po kryteriach, które realnie zmieniają wynik pilotu.
+
+## Macierz oceny
+
+| Kryterium | Trener | Dietetyk | Fizjo |
+|---|---|---|---|
+| **Compliance value prop** (jak bardzo influencer nas potrzebuje) | słaba | średnia/silna | **najsilniejsza** |
+| **Strukturalna potrzeba 1:1** (ekonomika dla specjalisty) | słaba | średnia | **wbudowana** |
+| **Dostępność influencerów z dowodem konwersji** | **dużo** | dużo | mało |
+| **Nasycenie konkurencji produktowej** | **brutalne** | duże | **umiarkowane** |
+| **Dostępność specjalisty pod pilota** | łatwa | łatwa | trudniejsza (uprawnienia KIF) |
+
+---
+
+## Trener personalny — najsłabszy fit
+
+**Compliance:** trening personalny **nie jest zawodem regulowanym** w PL. Brak ustawowych wymagań co do uprawnień. Tarcza UOKiK praktycznie nie istnieje — nasza główna value prop znika.
+
+**Konkurencja produktowa:** brutalna. FitAtu, Diet & Training by Ann, NetrenerOnline, plus każdy influencer-trener wypuszcza własny plan przez Instagram/Stripe bez żadnego pośrednika.
+
+**Dynamika rynku:** influencer-trener ma zasięg, plan i Stripe. **Nie potrzebuje nas.** Naszą marżę 30–50% bardzo trudno uzasadnić.
+
+**Werdykt:** odpada.
+
+---
+
+## Dietetyk — środek
+
+**Compliance:** UOKiK aktywnie ściga "doradztwo żywieniowe" prowadzone przez nie-dietetyków. Realne ryzyko, realna value prop.
+
+**Konkurencja produktowa:** duża, ale fragmentaryczna. Bezdiety.pl, Vitalia, Diet & Training by Ann, Pamela Stefanowicz, Kasia Bigos — wszyscy mają już własne produkty.
+
+**Edge case 1:1:** opcjonalny. Większość klientek bierze plan i znika — specjalista nie ma stabilnego strumienia konsultacji.
+
+**Dynamika rynku:** alternatywa dla influencera = dietetyk-firmant na umowę ok. 4–5K/mies. flat. Trudno wycenić naszą marżę powyżej tego progu.
+
+**Werdykt:** wybieralny tylko, jeśli mamy istniejącą relację z konkretnym influencerem-dietetykiem szukającym teamu produktowego.
+
+---
+
+## Fizjoterapia — najmocniejszy fit, najtrudniejszy start
+
+**Compliance:** zawód medyczny regulowany ustawą o zawodzie fizjoterapeuty + KIF. Programów rehabilitacyjnych i ćwiczeń specyficznych **nie można sprzedawać bez fizjoterapeuty firmującego.** To nie jest miękkie ryzyko UOKiK — to twarda ustawa.
+
+**Edge case 1:1:** **strukturalny.** Każda interwencja fizjo wymaga indywidualnej oceny. Specjalista zarabia od dnia 1 na konsultacjach z klientów produktu — nie czekamy aż "sieć się zagęści".
+
+**Konkurencja produktowa:** umiarkowana. RehaSport, Fizjoterapeuty.pl działają głównie jako katalogi 1:1, mniej jako studio produktowe pod brand influencera. Luka jest.
+
+**Problem:** mniej influencerów z dużym zasięgiem konwertującym. Łukasz Wójcicki, Fizjogram, Olek Włodyka — istnieją, ale to nie liga Lewandowskiej. **W sumie zaleta:** mniej alternatyw dla nich = większa nasza dźwignia w negocjacji.
+
+**Werdykt:** najmocniejszy fit z naszą propozycją wartości.
+
+---
+
+## Rekomendacja: fizjo
+
+Nasze trzy realne aktywa (operacje produktu, compliance, routing edge cases do specjalisty) mają w fizjo największą wartość, a alternatywy dla influencera-fizjo są najsłabsze. Pilot dostaje:
+
+- **Twardą podstawę prawną** dla naszej obecności w teamie (a nie tylko UOKiK risk story).
+- **Specjalistę zarabiającego od dnia 1** na 1:1 z klientów produktu.
+- **Niskonasyconą kategorię** zamiast wojny cenowej z istniejącymi brandami.
+- **Influencera z mniejszą BATNA** — mniej naturalnych alternatyw do współpracy.
+
+---
+
+## Co może zmienić rekomendację
+
+Jedno pytanie ma większą wagę niż cała powyższa analiza:
+
+**Czy masz już istniejącą relację — z influencerem albo specjalistą — w którymkolwiek z tych wertykałów?**
+
+- **Tak, ciepły influencer-dietetyk szukający teamu produktowego** → dietetyk wygrywa. Pilot jest o walidacji ekonomiki jednego projektu, nie o wygraniu kategorii. Wybór "ciepłej" relacji bije zimną teorię rynku.
+- **Tak, ciepły influencer-trener** → mimo wszystko ostrożność. Brak compliance value prop oznacza, że trudno utrzymać marżę. Można rozważyć, ale model finansowy jest pod presją.
+- **Zero relacji w którymkolwiek wertykalu** → fizjo jest właściwą zerojedynkową decyzją.
+
+## Następny krok
+
+Niezależnie od wyboru wertykalu: konkretne 4–6 tygodni na zamknięcie trójkąta (influencer + specjalista + zarys produktu z liczbami). Bez tego pilot nie startuje, koncepcja wraca do szuflady.
+</script>
+
+<script id="md-pilot" type="text/markdown">
+# znany.trener — propozycja pilotu
+
+Dokument przedstawia konkretny model pierwszego projektu pod marką **znany.trener**. Zakłada uczciwą diagnozę stanu wyjściowego znany.pl i proponuje sekwencję, w której **pojedynczy projekt produktowy** rozwiązuje dwa problemy serwisu (brak ruchu, brak specjalistów) zamiast walczyć z nimi osobno.
+
+---
+
+## Stan wyjściowy — bez upiększania
+
+1. **Znany.pl ma dziś zerowy ruch.** Inwestowanie w SEO katalogu od zera w wertykalu fitness to wojna z FitAtu, Diet & Training by Ann i dziesiątkami marek influencerów-trenerów. Bez zewnętrznego punktu wejścia katalog się nie zapełni i nie przekonwertuje.
+2. **Specjaliści sami się nie rejestrują.** I nie zarejestrują, dopóki nie dostaną płacącego klienta zanim wejdą do sieci. "Dołącz do katalogu" to zła propozycja, kiedy katalog nie ma ruchu.
+3. **Wertykal trenerski jest najsłabszy regulacyjnie.** Trening personalny nie jest zawodem regulowanym — odpada cała narracja "tarcza compliance". To, co realnie sprzedajemy influencerowi-trenerowi, to **operacje produktowe i ścieżka klienta po kursie**, nie ochrona prawna.
+
+**Konsekwencja:** nie próbujemy "rozkręcać katalogu" ani "budować sieci specjalistów" jako pierwszego ruchu. Robimy odwrotnie — **jeden konkretny projekt z jednym influencerem napędza ruch i wciąga trenerów**. Sieć jest konsekwencją, nie warunkiem startowym.
+
+---
+
+## Model: studio, nie platforma
+
+W pilocie znany.pl działa jako **studio operacyjne** wokół jednego influencera-trenera:
+
+- **Influencer** daje zasięg, nazwisko, twarz produktu.
+- **My** robimy produkt (programowanie treningu w produkt cyfrowy), operacje (fakturowanie, support, refundy, RODO, ToS), performance marketing, infrastrukturę techniczną.
+- **Specjalista-kurator** (drugi trener z dorobkiem, niezależny od influencera) waliduje merytorykę i obsługuje 1:1 edge cases.
+
+Produkt sprzedaje się pod brandem influencera (`<nick>.znany.pl` lub jego własna domena), a znany.pl jest backendem operacyjnym, nie frontem marketingowym. **To rozwiązuje problem zerowego ruchu na znany.pl — ruch idzie z dystrybucji influencera, a my budujemy bazę klientów w naszym ekosystemie pod spodem.**
+
+---
+
+## Format produktu
+
+Najbezpieczniejszy format do walidacji ekonomiki:
+
+- **Kohortowy program treningowy 8–12 tygodni** (nie subskrypcja open-end, nie ebook).
+- **Stała grupa klientów** zapisanych w jednej fali — łatwiej operować supportem, łatwiej mierzyć retencję, łatwiej domknąć follow-up.
+- **White-label pod brand influencera** — pełna autonomia narracyjna influencera, my niewidzialni w warstwie marketingowej.
+- **Cena premium** (segment 600–1500 zł za kohortę) — niska cena nie pokryje 1:1 edge cases i marży studia.
+
+---
+
+## Trzy warstwy produktu — i dlaczego trzecia jest najważniejsza
+
+Ten układ jest centralnym pomysłem dokumentu. To z niego wynika **dlaczego znany.pl ma sens jako infrastruktura, a nie tylko jako wykonawca jednego kursu**.
+
+### Warstwa 1 — rdzeń: program treningowy
+Plany treningowe, materiały wideo, harmonogram, grupa zamknięta. Klient płaci raz, dostaje 8–12 tygodni produktu. To warstwa, którą influencer-trener może *teoretycznie* zrobić sam — i którą wielu robi, słabo, bez teamu produktowego. **Nasza wartość: produkcja na czas i pełne operacje. Czas-do-rynku z tygodni zamiast miesięcy.**
+
+### Warstwa 2 — edge cases 1:1
+Część klientów z każdej kohorty ma indywidualne potrzeby, których program zbiorowy nie obsłuży: kontuzje, ciąża, cele medyczne, specyfika sportu, ograniczenia ortopedyczne. Routujemy ich do **trenera-wykonawcy** w ich mieście (z naszej rosnącej sieci). Trener dostaje **płacącego klienta zanim zapłaci za bycie w sieci** — to jest jedyna oferta, która faktycznie ściąga specjalistów na pokład. **To rozwiązuje problem braku specjalistów na znany.pl.**
+
+Sieć trenerów-wykonawców rośnie organicznie — każda kolejna kohorta dorzuca kilku trenerów, którzy zostają, bo widzą konwersję.
+
+### Warstwa 3 — ścieżka klienta po kursie (LTV)
+
+**To jest największa stracona wartość w branży fitness i jednocześnie miejsce, gdzie znany.pl realnie dodaje wartość ponad to, co sam influencer kiedykolwiek dowiezie.**
+
+Po skończonym 8–12 tygodniowym programie ~80% klientów znika z LTV influencera. Skończyli, są zadowoleni, wracają do swojego życia. Ale ich potrzeba *nie* zniknęła — przesunęła się. Po fazie intensywnej pracy nad ciałem pojawia się następna potrzeba: **regeneracja, suplementacja, recovery, optymalizacja snu, terapie wellness, biohacking, długoterminowa mobilność.** To są kategorie, które influencer-trener nie obsłuży sam, bo wykraczają poza jego ekspertyzę.
+
+Tu znany.pl wchodzi jako **operator ścieżki post-kurs**:
+
+- Routujemy klientów do lokalnych partnerów wellness/recovery: fizjoterapeuci, dietetycy/suplementacja, **kliniki wellness oferujące terapie regeneracyjne**, gabinety mobility/masażu.
+- Każde takie skierowanie to revenue share dla znany.pl i lokalnego partnera.
+- Klient zostaje w ekosystemie znany.pl, **nawet kiedy cykl uwagi influencera się skończy**.
+
+**To jest jedyna trwała część biznesu.** Warstwa 1 zarabia raz, warstwa 2 dorzuca konsultacje, warstwa 3 to powtarzalny strumień usług wellness, którego sam influencer nigdy nie zmonetyzuje, bo nie ma infrastruktury skierowań. Ta warstwa jest też niezależna od konkretnego influencera — działa dla każdej kolejnej kohorty, każdego kolejnego projektu w wertykalu.
+
+**Bonus:** ten układ daje znany.pl dane, których nie ma żaden konkurent — *co kupuje klient fitness po skończonym kursie*. To jest baza decyzyjna pod kolejne projekty.
+
+---
+
+## Jak ten model rozwiązuje dwa problemy znany.pl
+
+### Problem 1: zerowy ruch
+Nie próbujemy generować ruchu **na znany.pl jako katalog**. Generujemy ruch **na produkt influencera**, a klienci tego produktu wpadają w ekosystem znany.pl przez warstwę 2 (1:1) i warstwę 3 (post-kurs wellness). Po pilocie znany.pl ma:
+- bazę realnych klientów (nie odwiedzających)
+- sieć trenerów-wykonawców z dowodem konwersji
+- sieć partnerów wellness z faktycznymi skierowaniami i danymi o LTV
+
+To jest baza do drugiego projektu w wertykalu i do organicznego SEO/AEO — ale na **wykazanych** ścieżkach klienta, nie spekulacyjnych.
+
+### Problem 2: brak specjalistów na znany.pl
+Specjaliści (trenerzy-wykonawcy w warstwie 2, partnerzy wellness w warstwie 3) **nie są zapraszani do katalogu**. Są aktywowani pod konkretne skierowania z aktywnej kohorty. Każdy specjalista, który wejdzie, robi to z płacącym klientem w ręku.
+
+Po dwóch kohortach mamy sieć kilkunastu trenerów-wykonawców i kilkunastu partnerów wellness w 3–5 miastach — bez kampanii rekrutacyjnej, bez katalogu na sucho.
+
+---
+
+## Ekonomika pilotu
+
+Konkretne liczby do uzgodnienia po wyborze influencera i wyliczeniu CAC, ale rozkład:
+
+- **Studio (znany.pl):** 30–50% przy pierwszym projekcie — pokrywa produkcję, performance marketing, operacje, infrastrukturę. Wysoki udział uzasadniony brakiem efektu skali i koniecznością zbudowania playbooka.
+- **Influencer:** główny beneficjent warstwy 1, plus revenue share z warstwy 2 i 3 jako lojalność długoterminowa.
+- **Specjalista-kurator:** stawka stała za walidację merytoryczną + share od warstwy 2.
+- **Trenerzy-wykonawcy (warstwa 2):** zarabiają per konsultacja, znany.pl bierze prowizję.
+- **Partnerzy wellness (warstwa 3):** revenue share od skierowanych klientów, model "afiliacyjny rozliczany ze skierowania".
+
+**Krytyczne:** warstwa 3 jest największym aktywem długoterminowym, dlatego nawet jeśli pierwszy pilot wyjdzie na zero w warstwie 1, ma sens, jeśli walidacja warstwy 3 zadziała. To jest właściwa metryka sukcesu pilotu, nie ROI z samego kursu.
+
+---
+
+## Co znany.pl wynosi z pilotu
+
+1. **Pierwszy realny ruch** w historii serwisu — kohortowy, z dystrybucji influencera.
+2. **Pierwsi trenerzy-wykonawcy** w sieci, którzy zostali, bo dostali klienta, a nie zaproszenie.
+3. **Pierwsze partnerstwa wellness** z faktycznymi skierowaniami — fundament warstwy 3, której nie ma żaden konkurent.
+4. **Dane o ścieżce klienta po kursie** — co kupuje, gdzie idzie, ile wydaje. To jest decyzyjna baza pod każdy kolejny projekt.
+5. **Powtarzalny playbook** dla drugiego projektu w wertykalu trenerskim (i potem do replikacji w dietetycznym, fizjo, kolejnych).
+
+---
+
+## Sekwencja 4–6 tygodni
+
+1. **Tydzień 1–2:** wybór influencera-trenera z dowodem konwersji (nie samo follower count — sprzedaż wcześniejszych produktów / affiliate). Zamknięcie warunków rev-share.
+2. **Tydzień 2–3:** specjalista-kurator (trener z dorobkiem, niezależny od influencera) + 1–2 trenerów-wykonawców w głównych miastach influencera.
+3. **Tydzień 2–4:** **najważniejszy strumień prac** — 3–5 lokalnych partnerów wellness/recovery do warstwy 3 w miastach, gdzie spodziewamy się największej kohorty. Te rozmowy zaczynamy równolegle z resztą, bo to fundament długoterminowej wartości.
+4. **Tydzień 3–5:** produkcja produktu (warstwa 1) + infrastruktura operacyjna (białoetykietowy checkout, fakturowanie, support).
+5. **Tydzień 5–6:** start sprzedaży pilotowej kohorty.
+
+---
+
+## Decyzja zerojedynkowa
+
+Jeśli w 4–6 tygodni domkniemy: influencera + specjalistę-kuratora + 1–2 trenerów-wykonawców + **3–5 lokalnych partnerów wellness w warstwie 3** + zarys ekonomiki z liczbami — **startujemy pilota**.
+
+Jeśli nie domkniemy warstwy 3, decyzja jest trudniejsza — pilot można odpalić bez niej, ale traci wtedy najmocniejszy element propozycji wartości znany.pl. Warstwa 1 sama w sobie jest niska-marżową usługą produkcyjną, którą może świadczyć każda agencja kursowa.
+
+**Warstwa 3 to jest to, co odróżnia znany.pl od kolejnej agencji produktowej dla influencerów.** Bez niej pilot ma niski sufit. Z nią — buduje fundament pod długoterminową wartość serwisu, niezależną od cyklu konkretnego influencera.
+</script>
+
+<!-- MARKED.JS for rendering -->
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+
+<script>
+  const DOCS = {
+    ideas: {
+      file: 'ideas.md',
+      phase: 'faza 1 · empatia',
+      title: 'Koncepcja zrewidowana',
+      prev: null,
+      next: 'wybor',
+    },
+    wybor: {
+      file: 'wybor-wertykalu.md',
+      phase: 'faza 2 · definiowanie',
+      title: 'Wybór wertykalu',
+      prev: 'ideas',
+      next: 'pilot',
+    },
+    pilot: {
+      file: 'pilot-znany-trener.md',
+      phase: 'faza 3 · ideacja',
+      title: 'Propozycja pilotu',
+      prev: 'wybor',
+      next: null,
+    },
+  };
+
+  function load(slug) {
+    if (!DOCS[slug]) slug = 'ideas';
+    const doc = DOCS[slug];
+    const src = document.getElementById('md-' + slug).textContent;
+    document.getElementById('content').innerHTML = marked.parse(src);
+    document.getElementById('docFilename').textContent = doc.file;
+    document.getElementById('docPhase').textContent = doc.phase;
+    document.title = doc.title + ' · Reader — znany.trener';
+
+    // Active state in sidebar
+    document.querySelectorAll('.side-nav a[data-doc]').forEach(a => {
+      a.classList.toggle('active', a.dataset.doc === slug);
+    });
+
+    // Pagination
+    const pag = document.getElementById('pagination');
+    pag.innerHTML = '';
+    if (doc.prev) {
+      const p = DOCS[doc.prev];
+      pag.innerHTML += `<a class="pag-link" href="#${doc.prev}">
+        <div class="pag-dir">← poprzednia</div>
+        <div class="pag-title">${p.title}</div>
+      </a>`;
+    } else {
+      pag.innerHTML += `<div class="pag-link disabled">
+        <div class="pag-dir">— początek —</div>
+        <div class="pag-title">to pierwszy dokument</div>
+      </div>`;
+    }
+    if (doc.next) {
+      const n = DOCS[doc.next];
+      pag.innerHTML += `<a class="pag-link next" href="#${doc.next}">
+        <div class="pag-dir">następna →</div>
+        <div class="pag-title">${n.title}</div>
+      </a>`;
+    } else {
+      pag.innerHTML += `<a class="pag-link next" href="makieta.html">
+        <div class="pag-dir">prototyp →</div>
+        <div class="pag-title">Otwórz makietę produktu</div>
+      </a>`;
+    }
+
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+
+  function currentSlug() {
+    const hash = window.location.hash.slice(1);
+    return DOCS[hash] ? hash : 'ideas';
+  }
+
+  window.addEventListener('hashchange', () => load(currentSlug()));
+  load(currentSlug());
+</script>
+
+</body>
+</html>
