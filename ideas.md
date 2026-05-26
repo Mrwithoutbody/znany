@@ -58,11 +58,32 @@ UOKiK realnie karze za nieoznaczone reklamy i nieuprawnione doradztwo. To jest *
 
 ---
 
+## Warstwa produktu — prototypy (co już klikamy)
+
+Zbudowaliśmy dwa klikalne prototypy konsumenckiej warstwy produktu. **To nie zmienia scope'u pilota** — to wizualizacja, jak *jeden program* może być dostarczony i dokąd to idzie, jeśli ekonomika się spina. Demo ≠ plan startu.
+
+- **Circle Care** — czysty, „dorosły" wellness (estetyka shadcn). Program z twarzą influencera, zaprojektowany przez specjalistę, sesje dzień po dniu. → https://mrwithoutbody.github.io/znany/circle-care/
+- **care·deck** — ta sama treść w grywalnej skórze: **talia rozłożona na dni**, odkrywasz jedną kartę (wyzwanie) dziennie; karta rzadka = influencer, zwykła = specjalista. Estetyka Swiss/Helvetica, spójna ze studio.znany.pl. → https://mrwithoutbody.github.io/znany/care-deck/
+
+**Co z tego jest zgodne z pilotem (oś „teraz"):**
+- Mechanika „talia na dni" = naturalny UX dostarczenia **jednego 8-tygodniowego programu** (codzienne wyzwanie zamiast 60-minutowego modułu). Podnosi ukończenie i retencję *w obrębie jednego produktu* — bez sieci, bez subskrypcji.
+- Jawne autorstwo: rzadka karta = influencer (twarz), zwykła = specjalista (merytoryka + podpis). To dokładnie model „influencer × specjalista" z compliance.
+- Grywalizacja (postęp, streak) podnosi LTV jednego produktu — wprost wspiera walidację ekonomiki, której szuka pilot.
+
+**Co zostaje hipotezą na potem (oś „później", bez zmian):**
+- **Domy / kręgi / ranking dom-vs-dom** — warstwa sieciowa i społecznościowa. Wymaga gęstości userów i wielu programów. Park do czasu, aż pilot dowiezie ekonomikę.
+- **Subskrypcja / wiele talii naraz** — świadomie poza pilotem (pilot = jeden produkt o ograniczonym scope, nie „platforma na lata").
+- **Agregator specjalistów backstage** — kusi w pitchu, ale to ten sam marketplace, który parkujemy niżej.
+
+> Wniosek: z satelitów bierzemy **UX dostarczenia pojedynczego programu** (talia na dni + jawne autorstwo). Resztę (sieć, subskrypcja, marketplace) traktujemy jak ozdoby demo, nie scope startu.
+
+---
+
 ## Czego NIE robimy (jeszcze)
 
 Wyrzucone z pierwotnej koncepcji, bo to spekulacje wymagające gęstości sieci, której nie mamy:
 
-- **Pakiety collaborative care** (oś 1) — wymagają ciężkiego case management i sieci specjalistów w wielu miastach. Pomysł zostaje w szufladzie, wraca po 5+ udanych projektach w wertykalu.
+- **Pakiety collaborative care** (oś 1) — wymagają ciężkiego case management i sieci specjalistów w wielu miastach. Pomysł zostaje w szufladzie, wraca po 5+ udanych projektach w wertykalu. *(Prototyp wizualny istnieje — patrz „Warstwa produktu" — ale scope pilota bez zmian.)*
 - **Usługi grupowe pod marką aplikacji** (oś 2) — konflikt interesów z influencerem (jego brand, cudzy przychód). Realniej: specjalista buduje własny brand z portfolio współpracy.
 - **Wiele wertykałów równolegle** — najpierw jeden działa, potem drugi. Wertykalizacja jako koncept ok, jako równoległy GTM zabiera kapitał i fokus.
 - **AEO/GEO jako kanał** — może coś z tego będzie za 2–3 lata, dziś klient idzie z Google/Instagrama/poleceń. Performance marketing pod konkretny produkt influencera, nie "search w erze AI".
