@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>znany.trener — design thinking output</title>
+<style>
+  :root {
+    --bg: #fafaf9;
+    --surface: #ffffff;
+    --ink: #0a0a0a;
+    --ink-2: #525252;
+    --ink-3: #a3a3a3;
+    --line: #e7e5e4;
+    --accent: #047857;
+    --accent-soft: #d1fae5;
+    --warn: #dc2626;
+    --gold: #b45309;
+    --gold-soft: #fef3c7;
+    --navy: #0c1a3a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+  section { padding: 72px 0; }
+  a { color: inherit; }
+
+  /* Hero */
+  .hero {
+    background: var(--navy);
+    color: white;
+    padding: 88px 0 72px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(circle at 15% 30%, rgba(4,120,87,0.25), transparent 50%),
+      radial-gradient(circle at 85% 70%, rgba(180,83,9,0.2), transparent 50%);
+  }
+  .hero-inner { position: relative; }
+  .hero .meta-top {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 20px;
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .hero .meta-top span.tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 100px;
+    padding: 4px 12px;
+    color: rgba(255,255,255,0.85);
+    font-size: 11px;
+  }
+  .hero h1 {
+    font-size: clamp(48px, 8vw, 88px);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 0.96;
+    margin-bottom: 24px;
+  }
+  .hero h1 .dot { color: #10b981; }
+  .hero h1 small {
+    display: block;
+    font-size: 0.32em;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: rgba(255,255,255,0.55);
+    margin-top: 16px;
+  }
+  .hero .lead {
+    font-size: clamp(17px, 1.7vw, 20px);
+    color: rgba(255,255,255,0.78);
+    max-width: 680px;
+    margin-bottom: 36px;
+  }
+  .hero-meta {
+    display: flex; gap: 36px; flex-wrap: wrap; font-size: 13px;
+  }
+  .hero-meta div { color: rgba(255,255,255,0.55); }
+  .hero-meta strong { display: block; color: white; font-size: 15px; margin-bottom: 2px; }
+
+  /* Process bar */
+  .process-bar {
+    background: white;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: 32px 0;
+  }
+  .process {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    align-items: stretch;
+  }
+  @media (max-width: 800px) { .process { grid-template-columns: repeat(2, 1fr); } }
+  .phase {
+    text-align: left;
+    padding: 14px 16px;
+    border-radius: 10px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    position: relative;
+  }
+  .phase .step {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .phase h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .phase p { font-size: 11px; color: var(--ink-2); line-height: 1.4; }
+  .phase.done::after {
+    content: '✓';
+    position: absolute;
+    top: 12px; right: 14px;
+    width: 18px; height: 18px;
+    background: var(--accent);
+    color: white;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+  }
+  .phase.now {
+    background: linear-gradient(135deg, #fffbeb 0%, white 100%);
+    border-color: var(--gold);
+  }
+  .phase.now .step { color: var(--gold); }
+  .phase.now::after {
+    content: '→';
+    position: absolute;
+    top: 10px; right: 14px;
+    color: var(--gold);
+    font-weight: 800;
+    font-size: 16px;
+  }
+
+  /* Section heading */
+  .label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--accent);
+    margin-bottom: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .label .num {
+    width: 22px; height: 22px;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+  }
+  h2 {
+    font-size: clamp(26px, 3.6vw, 36px);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 12px;
+    max-width: 760px;
+  }
+  .h2-sub {
+    color: var(--ink-2);
+    font-size: 16px;
+    max-width: 700px;
+    margin-bottom: 32px;
+  }
+
+  /* Diagnoza */
+  .problems {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 700px) { .problems { grid-template-columns: 1fr; } }
+  .problem {
+    background: white;
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--warn);
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .problem .ico {
+    width: 36px; height: 36px;
+    background: #fee2e2;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--warn);
+    margin-bottom: 16px;
+  }
+  .problem h3 { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+  .problem p { font-size: 14px; color: var(--ink-2); }
+
+  .insight {
+    margin-top: 28px;
+    padding: 24px 28px;
+    background: var(--accent-soft);
+    border-left: 3px solid var(--accent);
+    border-radius: 10px;
+    font-size: 16px;
+    color: var(--ink);
+  }
+  .insight strong { color: var(--accent); }
+
+  /* Layers */
+  .layers { display: flex; flex-direction: column; gap: 14px; }
+  .layer {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 28px;
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 20px;
+    align-items: flex-start;
+  }
+  .layer-num {
+    width: 56px; height: 56px;
+    border-radius: 12px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; font-weight: 800;
+  }
+  .layer h3 { font-size: 19px; font-weight: 700; margin-bottom: 4px; letter-spacing: -0.01em; }
+  .layer .sub { font-size: 12px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--ink-3); margin-bottom: 12px; font-weight: 600; }
+  .layer p { font-size: 14px; color: var(--ink-2); line-height: 1.6; }
+
+  .layer.gold {
+    border: 2px solid var(--gold);
+    background: linear-gradient(135deg, white 0%, #fffbeb 100%);
+    position: relative;
+  }
+  .layer.gold .layer-num { background: var(--gold-soft); color: var(--gold); }
+  .layer.gold .sub { color: var(--gold); }
+  .layer.gold::after {
+    content: 'rdzeń długoterminowej wartości';
+    position: absolute; top: -10px; right: 24px;
+    background: var(--gold); color: white;
+    font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    padding: 5px 10px; border-radius: 5px;
+  }
+  .substreams {
+    margin-top: 16px;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px;
+  }
+  @media (max-width: 700px) { .substreams { grid-template-columns: repeat(3, 1fr); } }
+  .sub-pill {
+    background: white;
+    border: 1px solid var(--gold-soft);
+    border-radius: 8px;
+    padding: 10px 6px;
+    text-align: center;
+  }
+  .sub-pill svg { width: 20px; height: 20px; color: var(--gold); margin-bottom: 4px; }
+  .sub-pill div { font-size: 11px; font-weight: 600; color: var(--ink); line-height: 1.2; }
+
+  /* Prototype meta + mockup link */
+  .meta-prototype {
+    margin-top: 24px;
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 28px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: center;
+  }
+  @media (max-width: 700px) { .meta-prototype { grid-template-columns: 1fr; } }
+  .meta-prototype h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+  .meta-prototype p { font-size: 14px; color: var(--ink-2); line-height: 1.55; }
+  .file-list { display: flex; flex-direction: column; gap: 6px; }
+  .file-row {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-family: 'SF Mono', Monaco, Consolas, monospace;
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.15s;
+  }
+  .file-row svg { color: var(--ink-3); flex-shrink: 0; }
+  .file-row .name { color: var(--ink); font-weight: 600; }
+  .file-row .size { color: var(--ink-3); margin-left: auto; font-size: 11px; }
+  .file-row.cta {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+  }
+  .file-row.cta:hover { background: #a7f3d0; }
+  .file-row.cta svg { color: var(--accent); }
+  .file-row.cta .size { color: var(--accent); font-weight: 700; }
+
+  /* Offer */
+  .offer {
+    background: linear-gradient(135deg, #0c1a3a 0%, #1e293b 100%);
+    color: white;
+    padding: 80px 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .offer::before {
+    content: ''; position: absolute; inset: 0;
+    background:
+      radial-gradient(circle at 80% 20%, rgba(16,185,129,0.18), transparent 50%),
+      radial-gradient(circle at 20% 80%, rgba(180,83,9,0.18), transparent 50%);
+  }
+  .offer .container { position: relative; }
+  .offer .label { color: rgba(255,255,255,0.65); }
+  .offer h2 { color: white; max-width: 800px; }
+  .offer .h2-sub { color: rgba(255,255,255,0.65); margin-bottom: 40px; }
+
+  .sprints {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 800px) { .sprints { grid-template-columns: 1fr; } }
+  .sprint {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 16px;
+    padding: 32px;
+  }
+  .sprint.primary {
+    background: rgba(16,185,129,0.08);
+    border-color: rgba(16,185,129,0.35);
+  }
+  .sprint-tag {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: rgba(255,255,255,0.6);
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .sprint.primary .sprint-tag { color: #6ee7b7; }
+  .sprint h3 { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+  .sprint .duration { font-size: 13px; color: rgba(255,255,255,0.55); margin-bottom: 24px; }
+  .sprint ul { list-style: none; padding: 0; margin-bottom: 20px; }
+  .sprint li {
+    font-size: 14px;
+    color: rgba(255,255,255,0.85);
+    padding: 7px 0;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .sprint li:last-child { border-bottom: none; }
+  .sprint li svg { color: #6ee7b7; flex-shrink: 0; margin-top: 4px; }
+  .sprint .terms {
+    font-size: 12px;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.55;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255,255,255,0.12);
+  }
+  .sprint .terms strong { color: rgba(255,255,255,0.85); }
+
+  /* About me */
+  .about {
+    margin-top: 48px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 28px 32px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 24px;
+    align-items: center;
+  }
+  @media (max-width: 700px) { .about { grid-template-columns: 1fr; } }
+  .about-icon {
+    width: 56px; height: 56px;
+    background: rgba(16,185,129,0.15);
+    color: #6ee7b7;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .about h4 { font-size: 16px; font-weight: 700; color: white; margin-bottom: 4px; }
+  .about p { font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.55; }
+
+  footer {
+    padding: 24px 0;
+    text-align: center;
+    color: var(--ink-3);
+    font-size: 12px;
+    border-top: 1px solid var(--line);
+  }
+
+  /* ============================
+     MOBILE FIXES
+     ============================ */
+  @media (max-width: 640px) {
+    .container { padding: 0 18px; }
+    section { padding: 56px 0; }
+
+    /* Hero */
+    .hero { padding: 56px 0 52px; }
+    .hero .meta-top { gap: 8px; margin-bottom: 16px; }
+    .hero .meta-top span.tag { font-size: 10px; padding: 4px 10px; letter-spacing: 0.1em; }
+    .hero h1 { font-size: 44px; margin-bottom: 18px; line-height: 0.98; letter-spacing: -0.03em; }
+    .hero h1 small { font-size: 14px; margin-top: 12px; line-height: 1.35; }
+    .hero .lead { font-size: 15px; margin-bottom: 28px; line-height: 1.5; }
+    .hero-meta { gap: 18px; }
+    .hero-meta div { font-size: 12px; }
+    .hero-meta strong { font-size: 13px; margin-bottom: 2px; }
+
+    /* Process bar — single column on small */
+    .process-bar { padding: 22px 0; }
+    .process { grid-template-columns: 1fr; gap: 6px; }
+    .phase { padding: 12px 14px; padding-right: 38px; }
+    .phase h4 { font-size: 13px; }
+    .phase p { font-size: 11px; }
+    .phase.done::after, .phase.now::after { top: 14px; }
+
+    /* Sections */
+    h2 { font-size: 26px; margin-bottom: 8px; letter-spacing: -0.02em; line-height: 1.15; }
+    .h2-sub, p.intro { font-size: 15px; margin-bottom: 28px; line-height: 1.55; }
+    .label { font-size: 10px; letter-spacing: 0.14em; }
+    .label .num { width: 20px; height: 20px; font-size: 9px; }
+
+    /* Problem cards */
+    .problems { gap: 12px; }
+    .problem { padding: 20px; border-radius: 10px; }
+    .problem .ico { width: 32px; height: 32px; margin-bottom: 14px; }
+    .problem h3 { font-size: 16px; }
+    .problem p { font-size: 13px; }
+
+    /* Insight callout */
+    .insight, [class*="insight"] { padding: 18px 20px; font-size: 14px; line-height: 1.55; }
+
+    /* Layers */
+    .layers { gap: 10px; }
+    .layer { padding: 22px 20px; grid-template-columns: 44px 1fr; gap: 16px; border-radius: 12px; }
+    .layer-num { width: 44px; height: 44px; font-size: 20px; border-radius: 10px; }
+    .layer h3 { font-size: 17px; }
+    .layer .sub { font-size: 10px; margin-bottom: 8px; letter-spacing: 0.1em; }
+    .layer p { font-size: 13px; line-height: 1.55; }
+
+    /* Layer 3 ribbon — krótszy tekst i mniej miejsca */
+    .layer.gold::after {
+      content: 'rdzeń wartości';
+      right: 14px;
+      top: -9px;
+      font-size: 9px;
+      padding: 4px 8px;
+      letter-spacing: 0.06em;
+    }
+
+    /* Substreams — 2 cols zamiast 3 dla większych pillów */
+    .substreams { grid-template-columns: repeat(2, 1fr); gap: 6px; margin-top: 14px; }
+    .sub-pill { padding: 12px 8px; }
+    .sub-pill svg { width: 20px; height: 20px; }
+    .sub-pill div { font-size: 11px; }
+
+    /* Prototype meta */
+    .meta-prototype { padding: 22px 20px; gap: 18px; border-radius: 12px; }
+    .meta-prototype h3 { font-size: 18px; }
+    .meta-prototype p { font-size: 13px; }
+    .file-row { padding: 10px 12px; font-size: 12px; border-radius: 7px; }
+    .file-row .size { font-size: 10px; }
+
+    /* Offer */
+    .offer { padding: 56px 0; }
+    .sprints { gap: 12px; }
+    .sprint { padding: 24px 20px; border-radius: 12px; }
+    .sprint h3 { font-size: 19px; }
+    .sprint .duration { font-size: 12px; margin-bottom: 18px; }
+    .sprint ul { margin-bottom: 16px; }
+    .sprint li { font-size: 13px; padding: 6px 0; }
+    .sprint li code { font-size: 11px !important; word-break: break-all; }
+    .sprint .terms { font-size: 11px; padding-top: 14px; line-height: 1.55; }
+
+    /* About */
+    .about { padding: 22px 20px; gap: 16px; border-radius: 10px; }
+    .about-icon { width: 44px; height: 44px; }
+    .about h4 { font-size: 15px; }
+    .about p { font-size: 13px; line-height: 1.55; }
+
+    /* Footer */
+    footer { padding: 20px 0; font-size: 11px; }
+  }
+
+  /* Very small phones */
+  @media (max-width: 360px) {
+    .container { padding: 0 14px; }
+    .hero h1 { font-size: 38px; }
+    .hero .meta-top span.tag { font-size: 9px; padding: 3px 8px; }
+    .hero-meta { gap: 14px; }
+    h2 { font-size: 23px; }
+    .layer-num { width: 40px; height: 40px; font-size: 18px; }
+    .layer { grid-template-columns: 40px 1fr; gap: 14px; padding: 20px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container hero-inner">
+    <div class="meta-top">
+      <span class="tag">design thinking output</span>
+      <span class="tag">prototyp: 1 wieczór</span>
+      <span class="tag">AI + vibecoding</span>
+    </div>
+    <h1>znany<span class="dot">.</span>trener
+      <small>od ogólnego pomysłu do uzasadnionego pilotu z prototypem — w jeden wieczór</small>
+    </h1>
+    <p class="lead">Ten dokument jest jednocześnie analizą strategiczną dla znany.pl i prototypem pokazującym, jak pracuję. Wszystko poniżej powstało wczoraj — empatia, krytyka, model produktowy, ten landing, makieta produktu.</p>
+    <div class="hero-meta">
+      <div><strong>5 plików</strong>analiza + strategia + makieta</div>
+      <div><strong>1 wertykal wybrany</strong>uzasadniona decyzja, nie domysł</div>
+      <div><strong>3 warstwy produktu</strong>z drogą do walidacji</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS BAR -->
+<div class="process-bar">
+  <div class="container">
+    <div class="process">
+      <div class="phase done">
+        <div class="step">faza 1</div>
+        <h4>Empatia</h4>
+        <p>Diagnoza realnej sytuacji znany.pl</p>
+      </div>
+      <div class="phase done">
+        <div class="step">faza 2</div>
+        <h4>Definiowanie</h4>
+        <p>Reframe problemu z platformy na studio</p>
+      </div>
+      <div class="phase done">
+        <div class="step">faza 3</div>
+        <h4>Ideacja</h4>
+        <p>Model 3 warstw + wybór wertykalu</p>
+      </div>
+      <div class="phase done">
+        <div class="step">faza 4</div>
+        <h4>Prototyp</h4>
+        <p>Landing + makieta produktu</p>
+      </div>
+      <div class="phase now">
+        <div class="step">faza 5</div>
+        <h4>Test</h4>
+        <p>Spotkanie — walidacja kierunku</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EMPATHY -->
+<section>
+  <div class="container">
+    <div class="label"><span class="num">1</span>empatia</div>
+    <h2>Co naprawdę boli znany.pl</h2>
+    <p class="h2-sub">Trzy fakty wyjściowe — bez upiększania, bo z fałszywej diagnozy wychodzi fałszywy produkt.</p>
+
+    <div class="problems">
+      <div class="problem">
+        <div class="ico">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg>
+        </div>
+        <h3>Zerowy ruch</h3>
+        <p>Katalog od zera nie wygra z FitAtu i markami influencerów. SEO w fitness to wojna pozycyjna na lata.</p>
+      </div>
+      <div class="problem">
+        <div class="ico">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        </div>
+        <h3>Pusta sieć</h3>
+        <p>Specjaliści nie wejdą bez ruchu. „Dołącz do katalogu" nie sprzedaje, gdy nie ma czego dostarczyć.</p>
+      </div>
+      <div class="problem">
+        <div class="ico">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <h3>Słaby moat w trenerze</h3>
+        <p>Trener nie jest zawodem regulowanym — nie ma „tarczy compliance". Sprzedajemy operacje i LTV, nie ochronę prawną.</p>
+      </div>
+    </div>
+
+    <div class="insight">
+      <strong>Reframe (faza 2 — definiowanie):</strong> nie rozkręcamy katalogu osobno. <strong>Jeden konkretny projekt</strong> z jednym influencerem napędza ruch i sieć naraz. Sieć jest konsekwencją, nie warunkiem startowym.
+    </div>
+  </div>
+</section>
+
+<!-- IDEATE: 3 LAYERS -->
+<section style="background: white; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);">
+  <div class="container">
+    <div class="label"><span class="num">2</span>ideacja</div>
+    <h2>Trzy warstwy produktu</h2>
+    <p class="h2-sub">Każda warstwa rozwiązuje inny problem ekonomiczny. Warstwa 3 jest miejscem, w którym znany.pl realnie buduje wartość ponad to, co dowiezie sam influencer.</p>
+
+    <div class="layers">
+      <div class="layer">
+        <div class="layer-num">1</div>
+        <div>
+          <div class="sub">rdzeń</div>
+          <h3>Program treningowy</h3>
+          <p>8–12 tygodniowa kohorta pod brandem influencera. White-label, premium pricing. Studio dowozi produkt w tygodniach + pełne operacje.</p>
+        </div>
+      </div>
+
+      <div class="layer">
+        <div class="layer-num">2</div>
+        <div>
+          <div class="sub">edge cases 1:1</div>
+          <h3>Routing do trenerów-wykonawców</h3>
+          <p>Kontuzje, ciąża, sport specyficzny → trener w mieście klienta. Specjalista dostaje płacącego klienta od dnia 1 — i dlatego zostaje w sieci. To jest mechanizm wciągania trenerów, którego znany.pl dziś nie ma.</p>
+        </div>
+      </div>
+
+      <div class="layer gold">
+        <div class="layer-num">3</div>
+        <div>
+          <div class="sub">ścieżka klienta po kursie</div>
+          <h3>Ekosystem regeneracji i recovery</h3>
+          <p>~80% klientów znika z LTV po programie. Ich potrzeba się przesunęła: regeneracja, suplementacja, recovery, sen, mobilność, terapie wellness. Routujemy do lokalnych partnerów — strumień powtarzalny, niezależny od cyklu influencera.</p>
+          <div class="substreams">
+            <div class="sub-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8 8 6 11 6 14a6 6 0 0 0 12 0c0-3-2-6-6-12z"/></svg><div>Regeneracja</div></div>
+            <div class="sub-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg><div>Recovery</div></div>
+            <div class="sub-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M6.5 6.5l11 11"/></svg><div>Suplementacja</div></div>
+            <div class="sub-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><div>Sen</div></div>
+            <div class="sub-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><div>Mobility</div></div>
+            <div class="sub-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M2 12h4M18 12h4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg><div>Wellness</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="insight">
+      <strong>Rozwiązanie dwóch bóli w jednym ruchu:</strong> ruch idzie z dystrybucji influencera (problem 1 zamknięty), specjaliści wchodzą z płacącym klientem w ręku przez warstwy 2 i 3 (problem 2 zamknięty). Bez osobnej walki o katalog i osobnej kampanii rekrutacyjnej.
+    </div>
+  </div>
+</section>
+
+<!-- PROTOTYPE (META) -->
+<section>
+  <div class="container">
+    <div class="label"><span class="num">3</span>prototyp</div>
+    <h2>To co właśnie czytasz jest prototypem</h2>
+    <p class="h2-sub">Pięć plików, wszystkie powstały wczoraj. Każdy ma uzasadnienie, nie wishful thinking. Każdy gotowy do iteracji.</p>
+
+    <div class="meta-prototype">
+      <div>
+        <h3>Co dostałeś w tym pakiecie</h3>
+        <p>Pełny przebieg design thinkingu zapisany w plikach, ten landing jako wizualne podsumowanie, plus <strong>makieta strony produktu</strong> pokazująca jak realnie wygląda warstwa, którą zbudujemy. To jest <em>standardowe tempo pracy</em>, nie wyjątkowy wysiłek pod spotkanie.</p>
+      </div>
+      <div class="file-list">
+        <a class="file-row" href="reader.html#ideas">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <span class="name">ideas.md</span>
+          <span class="size">koncepcja zrewidowana</span>
+        </a>
+        <a class="file-row" href="reader.html#wybor">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <span class="name">wybor-wertykalu.md</span>
+          <span class="size">analiza 3 wertykałów</span>
+        </a>
+        <a class="file-row" href="reader.html#pilot">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <span class="name">pilot-znany-trener.md</span>
+          <span class="size">propozycja pilotu</span>
+        </a>
+        <div class="file-row">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          <span class="name">pitch/index.html</span>
+          <span class="size">ten dokument</span>
+        </div>
+        <a class="file-row cta" href="../landing/index.html">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+          <span class="name">landing/index.html</span>
+          <span class="size">↗ ania.znany.pl (kurs)</span>
+        </a>
+        <a class="file-row cta" href="../archive/makieta2.html">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="3"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
+          <span class="name">archive/makieta2.html</span>
+          <span class="size">↗ FORM (app)</span>
+        </a>
+        <a class="file-row cta" href="../index.html">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 11l-3-3 3-3"/></svg>
+          <span class="name">index.html</span>
+          <span class="size">↗ studio (for creators)</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OFFER -->
+<section class="offer">
+  <div class="container">
+    <div class="label"><span class="num">4</span>propozycja współpracy</div>
+    <h2>Co mogę dla ciebie zbudować</h2>
+    <p class="h2-sub">Dwie ścieżki, niska bariera wejścia. Sprint 1 to zamknięty zakres za stałą cenę — decydujesz o Sprint 2 dopiero kiedy zobaczysz, jak pracuję na żywo.</p>
+
+    <div class="sprints">
+      <!-- Sprint 1 -->
+      <div class="sprint primary">
+        <div class="sprint-tag">sprint 1 — start tu</div>
+        <h3>MVP pilotu</h3>
+        <div class="duration">4–6 tygodni · zamknięty zakres · fixed fee</div>
+        <ul>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>White-label landing <code style="font-size:12px;opacity:0.7">&lt;nick&gt;.znany.pl</code></li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Zapis na kohortę + checkout + onboarding</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Routing warstwy 2 (matching klient ↔ trener)</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Routing warstwy 3 (skierowania wellness)</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Admin panel + dashboard influencera</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Analytics: CAC, retencja, konwersja do warstw 2/3</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Dokumentacja + handoff jeśli chcesz</li>
+        </ul>
+        <div class="terms">Faktura B2B. Stack i decyzje techniczne po mojej stronie. <strong>Wycena po doprecyzowaniu zakresu — rozmawiamy.</strong></div>
+      </div>
+
+      <!-- Sprint 2 -->
+      <div class="sprint">
+        <div class="sprint-tag">sprint 2 — opcjonalnie po starcie</div>
+        <h3>Operowanie pilotu</h3>
+        <div class="duration">3–6 miesięcy · retainer · iteracje + rozwój</div>
+        <ul>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Iteracje produktu na podstawie danych</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Onboarding kolejnych specjalistów + partnerów warstwy 3</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Performance marketing — koordynacja + tracking</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Drobne buildy + bugfixy na bieżąco</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Cotygodniowy raport z metryk</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Decyzja o Sprint 3 / drugim projekcie</li>
+        </ul>
+        <div class="terms">Decydujesz po Sprint 1 czy idziemy dalej — <strong>bez zobowiązania z góry</strong>. Warunki ustalamy po pierwszym buildzie, kiedy wiemy o czym rozmawiamy.</div>
+      </div>
+    </div>
+
+    <div class="about">
+      <div class="about-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      </div>
+      <div>
+        <h4>Dlaczego tak szybko</h4>
+        <p>Vibecoding — buduję z AI w pętli design → kod → ewaluacja → kod. Stack: nowoczesny TS/React/Node + sprawdzone fundamenty (auth, payments, hosting). To co dla agencji jest 4-miesięcznym projektem, robię w 4–6 tygodni z jakością nadającą się do produkcji. Ten landing, cztery dokumenty strategiczne, makieta produktu i krytyka pierwotnego pomysłu — wszystko wczoraj, jedna osoba.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">znany.trener — design thinking output · prototyp v1</div>
+</footer>
+
+</body>
+</html>
