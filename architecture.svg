@@ -1,205 +1,217 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" font-family="Segoe UI, Arial, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 1080" font-family="Helvetica Neue, Helvetica, Arial, sans-serif">
   <defs>
     <filter id="shadow" x="-4%" y="-4%" width="108%" height="112%">
-      <feDropShadow dx="2" dy="3" stdDeviation="3" flood-opacity="0.15"/>
+      <feDropShadow dx="2" dy="3" stdDeviation="3" flood-opacity="0.12"/>
     </filter>
     <linearGradient id="gw" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#1e293b"/>
-      <stop offset="100%" stop-color="#334155"/>
+      <stop offset="0%" stop-color="#1c1917"/>
+      <stop offset="100%" stop-color="#0a0a08"/>
     </linearGradient>
-    <linearGradient id="core" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#3b82f6"/>
-      <stop offset="100%" stop-color="#2563eb"/>
+    <linearGradient id="studio" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5c6b32"/>
+      <stop offset="100%" stop-color="#44521f"/>
     </linearGradient>
-    <linearGradient id="fin" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#10b981"/>
-      <stop offset="100%" stop-color="#059669"/>
+    <linearGradient id="land" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#c2410c"/>
+      <stop offset="100%" stop-color="#9a3412"/>
     </linearGradient>
-    <linearGradient id="srv" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#f59e0b"/>
-      <stop offset="100%" stop-color="#d97706"/>
+    <linearGradient id="app" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#a16207"/>
+      <stop offset="100%" stop-color="#854d0e"/>
     </linearGradient>
-    <linearGradient id="acc" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#ef4444"/>
-      <stop offset="100%" stop-color="#dc2626"/>
+    <linearGradient id="ltv" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0f766e"/>
+      <stop offset="100%" stop-color="#115e59"/>
     </linearGradient>
-    <linearGradient id="con" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#8b5cf6"/>
-      <stop offset="100%" stop-color="#7c3aed"/>
+    <linearGradient id="comp" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#b91c1c"/>
+      <stop offset="100%" stop-color="#991b1b"/>
     </linearGradient>
-    <linearGradient id="mkt" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#ec4899"/>
-      <stop offset="100%" stop-color="#db2777"/>
+    <linearGradient id="ops" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#44403c"/>
+      <stop offset="100%" stop-color="#292524"/>
     </linearGradient>
     <linearGradient id="integ" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#64748b"/>
-      <stop offset="100%" stop-color="#475569"/>
+      <stop offset="0%" stop-color="#78716c"/>
+      <stop offset="100%" stop-color="#57534e"/>
     </linearGradient>
   </defs>
 
   <!-- Background -->
-  <rect width="1200" height="900" rx="16" fill="#f8fafc"/>
+  <rect width="1280" height="1080" rx="16" fill="#f7f4ee"/>
 
   <!-- Title -->
-  <text x="600" y="45" text-anchor="middle" font-size="24" font-weight="700" fill="#0f172a">AutoHub — Architektura mikroserwisow</text>
+  <text x="640" y="46" text-anchor="middle" font-size="24" font-weight="700" fill="#0a0a08">znany.pl — Architektura mikroserwisów</text>
+  <text x="640" y="70" text-anchor="middle" font-size="12.5" fill="#8a857c">Tworzenie → [Compliance] → Landing → App → Sieć/LTV   ·   warstwa Tworzenie ma 2 tryby: PILOT (ręczny) i SKALA (kreator)</text>
 
-  <!-- API Gateway -->
-  <rect x="420" y="65" width="360" height="56" rx="12" fill="url(#gw)" filter="url(#shadow)"/>
-  <text x="600" y="98" text-anchor="middle" font-size="16" font-weight="600" fill="#fff">API Gateway + Auth</text>
-  <text x="600" y="113" text-anchor="middle" font-size="11" fill="#94a3b8">User &amp; Auth  |  Routing  |  Rate Limiting</text>
+  <!-- ===== GATEWAY ===== -->
+  <rect x="390" y="95" width="500" height="58" rx="12" fill="url(#gw)" filter="url(#shadow)"/>
+  <text x="640" y="121" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">API Gateway + Tożsamość (multi-tenant)</text>
+  <text x="640" y="139" text-anchor="middle" font-size="11" fill="#a8a29e">Klient · Specjalista · Influencer · Operator   |   Auth · Routing · Rate limit</text>
 
-  <!-- Connector from GW down -->
-  <line x1="600" y1="121" x2="600" y2="150" stroke="#94a3b8" stroke-width="2" stroke-dasharray="6,3"/>
-  <line x1="600" y1="150" x2="200" y2="150" stroke="#94a3b8" stroke-width="2" stroke-dasharray="6,3"/>
-  <line x1="600" y1="150" x2="1000" y2="150" stroke="#94a3b8" stroke-width="2" stroke-dasharray="6,3"/>
+  <!-- Fan to band 01 (2 tryby) -->
+  <line x1="640" y1="153" x2="640" y2="176" stroke="#a8a29e" stroke-width="2" stroke-dasharray="6,3"/>
+  <line x1="375" y1="176" x2="905" y2="176" stroke="#a8a29e" stroke-width="2" stroke-dasharray="6,3"/>
+  <line x1="375" y1="176" x2="375" y2="220" stroke="#a8a29e" stroke-width="2" stroke-dasharray="6,3"/>
+  <line x1="905" y1="176" x2="905" y2="220" stroke="#a8a29e" stroke-width="2" stroke-dasharray="6,3"/>
 
-  <!-- Vertical drops -->
-  <line x1="200" y1="150" x2="200" y2="170" stroke="#94a3b8" stroke-width="2" stroke-dasharray="6,3"/>
-  <line x1="600" y1="150" x2="600" y2="170" stroke="#94a3b8" stroke-width="2" stroke-dasharray="6,3"/>
-  <line x1="1000" y1="150" x2="1000" y2="170" stroke="#94a3b8" stroke-width="2" stroke-dasharray="6,3"/>
+  <!-- ===== LANE LABELS + BARS ===== -->
+  <text x="45" y="255" text-anchor="middle" font-size="11" font-weight="700" letter-spacing="2" fill="#5c6b32" transform="rotate(-90 45 255)">01 · TWORZENIE</text>
+  <rect x="95" y="200" width="6" height="110" rx="3" fill="#5c6b32"/>
+  <text x="45" y="455" text-anchor="middle" font-size="11" font-weight="700" letter-spacing="2" fill="#c2410c" transform="rotate(-90 45 455)">02 · SPRZEDAŻ</text>
+  <rect x="95" y="410" width="6" height="90" rx="3" fill="#c2410c"/>
+  <text x="45" y="585" text-anchor="middle" font-size="11" font-weight="700" letter-spacing="2" fill="#a16207" transform="rotate(-90 45 585)">03 · DOSTARCZENIE</text>
+  <rect x="95" y="540" width="6" height="90" rx="3" fill="#a16207"/>
+  <text x="45" y="715" text-anchor="middle" font-size="11" font-weight="700" letter-spacing="2" fill="#0f766e" transform="rotate(-90 45 715)">04 · SIEĆ / LTV</text>
+  <rect x="95" y="670" width="6" height="90" rx="3" fill="#0f766e"/>
+  <text x="45" y="845" text-anchor="middle" font-size="11" font-weight="700" letter-spacing="2" fill="#44403c" transform="rotate(-90 45 845)">05 · DANE &amp; OPS</text>
+  <rect x="95" y="800" width="6" height="90" rx="3" fill="#44403c"/>
 
-  <!-- ===== ROW 1 ===== -->
+  <!-- ===== BAND 1 — TWORZENIE: dwa tryby ===== -->
+  <rect x="110" y="200" width="1060" height="110" rx="14" fill="#5c6b32" fill-opacity="0.05" stroke="#5c6b32" stroke-opacity="0.25" stroke-dasharray="4,4"/>
+  <text x="375" y="214" text-anchor="middle" font-size="10.5" font-weight="700" letter-spacing="1" fill="#44521f">PILOT — operator składa ręcznie</text>
+  <text x="905" y="214" text-anchor="middle" font-size="10.5" font-weight="700" letter-spacing="1" fill="#44521f">SKALA — self-serve (po 3–5 projektach)</text>
 
-  <!-- Vehicle Registry -->
-  <rect x="60" y="170" width="280" height="90" rx="12" fill="url(#core)" filter="url(#shadow)"/>
-  <text x="200" y="200" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Vehicle Registry</text>
-  <text x="200" y="218" text-anchor="middle" font-size="10.5" fill="#bfdbfe">VIN decode | Dane techniczne</text>
-  <text x="200" y="232" text-anchor="middle" font-size="10.5" fill="#bfdbfe">Cyfrowa ksiazka serwisowa</text>
-  <text x="200" y="246" text-anchor="middle" font-size="10.5" fill="#bfdbfe">Indeks zdrowia pojazdu</text>
+  <rect x="175" y="220" width="400" height="82" rx="12" fill="url(#studio)" filter="url(#shadow)"/>
+  <text x="375" y="246" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Treść projektu</text>
+  <text x="375" y="265" text-anchor="middle" font-size="10.5" fill="#ecf0d8">Structured doc (jak data.js w satelitach)</text>
+  <text x="375" y="280" text-anchor="middle" font-size="10.5" fill="#ecf0d8">Operator / specjalista wypełnia treść</text>
+  <text x="375" y="295" text-anchor="middle" font-size="10.5" fill="#ecf0d8">Bez kreatora — makieta.html to dowód</text>
 
-  <!-- Finance Tracker -->
-  <rect x="460" y="170" width="280" height="90" rx="12" fill="url(#fin)" filter="url(#shadow)"/>
-  <text x="600" y="200" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Finance Tracker</text>
-  <text x="600" y="218" text-anchor="middle" font-size="10.5" fill="#d1fae5">Wszystkie wydatki | Podatek</text>
-  <text x="600" y="232" text-anchor="middle" font-size="10.5" fill="#d1fae5">Leasing / finansowanie</text>
-  <text x="600" y="246" text-anchor="middle" font-size="10.5" fill="#d1fae5">Codzienna wycena pojazdu</text>
+  <rect x="705" y="220" width="400" height="82" rx="12" fill="url(#studio)" filter="url(#shadow)"/>
+  <rect x="705" y="220" width="400" height="82" rx="12" fill="none" stroke="#fff" stroke-opacity="0.55" stroke-width="1.5" stroke-dasharray="7,4"/>
+  <text x="905" y="246" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Studio / Kreator <tspan font-size="10" fill="#d9e0bd">(faza skali)</tspan></text>
+  <text x="905" y="265" text-anchor="middle" font-size="10.5" fill="#ecf0d8">No-code: bloki, szablony, treść w jednym</text>
+  <text x="905" y="280" text-anchor="middle" font-size="10.5" fill="#ecf0d8">Specjalista buduje sam, podgląd live</text>
+  <text x="905" y="295" text-anchor="middle" font-size="10.5" fill="#ecf0d8">Włącza się dopiero przy gęstości</text>
 
-  <!-- Accident Assistant -->
-  <rect x="860" y="170" width="280" height="90" rx="12" fill="url(#acc)" filter="url(#shadow)"/>
-  <text x="1000" y="200" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Accident Assistant</text>
-  <text x="1000" y="218" text-anchor="middle" font-size="10.5" fill="#fecaca">Prowadzony tryb szkody</text>
-  <text x="1000" y="232" text-anchor="middle" font-size="10.5" fill="#fecaca">Zabezpieczenie dowodow</text>
-  <text x="1000" y="246" text-anchor="middle" font-size="10.5" fill="#fecaca">Szkic wypadku | Uczestnicy</text>
+  <!-- konwergencja trybów do bramki compliance -->
+  <line x1="375" y1="302" x2="640" y2="330" stroke="#cfc8b4" stroke-width="1.5"/>
+  <line x1="905" y1="302" x2="640" y2="330" stroke="#cfc8b4" stroke-width="1.5"/>
 
-  <!-- Connectors Row 1 → Row 2 -->
-  <line x1="200" y1="260" x2="200" y2="290" stroke="#94a3b8" stroke-width="1.5"/>
-  <line x1="600" y1="260" x2="600" y2="290" stroke="#94a3b8" stroke-width="1.5"/>
-  <line x1="1000" y1="260" x2="1000" y2="290" stroke="#94a3b8" stroke-width="1.5"/>
+  <!-- ===== COMPLIANCE GATE ===== -->
+  <rect x="230" y="330" width="820" height="52" rx="10" fill="url(#comp)" filter="url(#shadow)"/>
+  <text x="640" y="354" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Bramka Compliance — landing nie publikuje się bez zielonego światła</text>
+  <text x="640" y="372" text-anchor="middle" font-size="10.5" fill="#fecaca">Walidacja specjalisty · UOKiK · uprawnienia KIF · RODO    |    pilot: człowiek + checklista   ·   skala: guardraile w bloku</text>
 
-  <!-- ===== ROW 2 ===== -->
+  <!-- gate -> band 02 -->
+  <line x1="640" y1="382" x2="640" y2="395" stroke="#a8a29e" stroke-width="2" stroke-dasharray="6,3"/>
+  <line x1="280" y1="395" x2="1000" y2="395" stroke="#a8a29e" stroke-width="2" stroke-dasharray="6,3"/>
+  <line x1="280" y1="395" x2="280" y2="410" stroke="#a8a29e" stroke-width="2" stroke-dasharray="6,3"/>
+  <line x1="640" y1="395" x2="640" y2="410" stroke="#a8a29e" stroke-width="2" stroke-dasharray="6,3"/>
+  <line x1="1000" y1="395" x2="1000" y2="410" stroke="#a8a29e" stroke-width="2" stroke-dasharray="6,3"/>
 
-  <!-- Document Vault -->
-  <rect x="60" y="290" width="280" height="90" rx="12" fill="url(#core)" filter="url(#shadow)"/>
-  <text x="200" y="320" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Document Vault</text>
-  <text x="200" y="338" text-anchor="middle" font-size="10.5" fill="#bfdbfe">Archiwum faktur i dokumentow</text>
-  <text x="200" y="352" text-anchor="middle" font-size="10.5" fill="#bfdbfe">Szablony umow | OCR</text>
-  <text x="200" y="366" text-anchor="middle" font-size="10.5" fill="#bfdbfe">Polisy | Dowody rejestracyjne</text>
+  <!-- ===== BAND 2 — SPRZEDAŻ (Landing) ===== -->
+  <rect x="115" y="410" width="330" height="90" rx="12" fill="url(#land)" filter="url(#shadow)"/>
+  <text x="280" y="438" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Landing Renderer</text>
+  <text x="280" y="457" text-anchor="middle" font-size="10.5" fill="#fed7aa">Render opublikowanej strony</text>
+  <text x="280" y="472" text-anchor="middle" font-size="10.5" fill="#fed7aa">White-label, custom domeny</text>
+  <text x="280" y="487" text-anchor="middle" font-size="10.5" fill="#fed7aa">ania.znany.pl · SEO / SSR</text>
 
-  <!-- Insurance Hub -->
-  <rect x="460" y="290" width="280" height="90" rx="12" fill="url(#fin)" filter="url(#shadow)"/>
-  <text x="600" y="320" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Insurance Hub</text>
-  <text x="600" y="338" text-anchor="middle" font-size="10.5" fill="#d1fae5">Porownywarka ubezpieczen</text>
-  <text x="600" y="352" text-anchor="middle" font-size="10.5" fill="#d1fae5">Zawarcie polisy w app</text>
-  <text x="600" y="366" text-anchor="middle" font-size="10.5" fill="#d1fae5">Auto-zmiana ubezpieczyciela</text>
+  <rect x="475" y="410" width="330" height="90" rx="12" fill="url(#land)" filter="url(#shadow)"/>
+  <text x="640" y="438" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Checkout &amp; Płatności</text>
+  <text x="640" y="457" text-anchor="middle" font-size="10.5" fill="#fed7aa">Koszyk, kohorty (limit miejsc)</text>
+  <text x="640" y="472" text-anchor="middle" font-size="10.5" fill="#fed7aa">Fale zapisów, kody rabatowe</text>
+  <text x="640" y="487" text-anchor="middle" font-size="10.5" fill="#fed7aa">Płatności jednorazowe</text>
 
-  <!-- Workshop Finder -->
-  <rect x="860" y="290" width="280" height="90" rx="12" fill="url(#srv)" filter="url(#shadow)"/>
-  <text x="1000" y="320" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Workshop Finder</text>
-  <text x="1000" y="338" text-anchor="middle" font-size="10.5" fill="#fef3c7">Wyszukiwarka z opiniami</text>
-  <text x="1000" y="352" text-anchor="middle" font-size="10.5" fill="#fef3c7">Porownanie cen napraw</text>
-  <text x="1000" y="366" text-anchor="middle" font-size="10.5" fill="#fef3c7">Anomaly detection kosztow</text>
+  <rect x="835" y="410" width="330" height="90" rx="12" fill="url(#land)" filter="url(#shadow)"/>
+  <text x="1000" y="438" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Rozliczenia &amp; Faktury</text>
+  <text x="1000" y="457" text-anchor="middle" font-size="10.5" fill="#fed7aa">Faktury, refundy</text>
+  <text x="1000" y="472" text-anchor="middle" font-size="10.5" fill="#fed7aa">Rev-share split</text>
+  <text x="1000" y="487" text-anchor="middle" font-size="10.5" fill="#fed7aa">Studio · Influencer · Specjalista</text>
 
-  <!-- Connectors Row 2 → Row 3 -->
-  <line x1="200" y1="380" x2="200" y2="410" stroke="#94a3b8" stroke-width="1.5"/>
-  <line x1="600" y1="380" x2="600" y2="410" stroke="#94a3b8" stroke-width="1.5"/>
-  <line x1="1000" y1="380" x2="1000" y2="410" stroke="#94a3b8" stroke-width="1.5"/>
+  <line x1="280" y1="500" x2="280" y2="540" stroke="#cfc8b4" stroke-width="1.5"/>
+  <line x1="640" y1="500" x2="640" y2="540" stroke="#cfc8b4" stroke-width="1.5"/>
+  <line x1="1000" y1="500" x2="1000" y2="540" stroke="#cfc8b4" stroke-width="1.5"/>
 
-  <!-- ===== ROW 3 ===== -->
+  <!-- ===== BAND 3 — DOSTARCZENIE (App) ===== -->
+  <rect x="115" y="540" width="330" height="90" rx="12" fill="url(#app)" filter="url(#shadow)"/>
+  <text x="280" y="568" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Silnik Programu / Kohorty</text>
+  <text x="280" y="587" text-anchor="middle" font-size="10.5" fill="#fde68a">Talia na dni, harmonogram</text>
+  <text x="280" y="602" text-anchor="middle" font-size="10.5" fill="#fde68a">Postęp, streak, ukończenie</text>
+  <text x="280" y="617" text-anchor="middle" font-size="10.5" fill="#fde68a">Zarządzanie kohortą 8–12 tyg.</text>
 
-  <!-- Vehicle Connect -->
-  <rect x="60" y="410" width="280" height="90" rx="12" fill="url(#con)" filter="url(#shadow)"/>
-  <text x="200" y="440" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Vehicle Connect</text>
-  <text x="200" y="458" text-anchor="middle" font-size="10.5" fill="#ddd6fe">GPS tracker | Diagnostyka</text>
-  <text x="200" y="472" text-anchor="middle" font-size="10.5" fill="#ddd6fe">API producentow | OBD</text>
-  <text x="200" y="486" text-anchor="middle" font-size="10.5" fill="#ddd6fe">Cyfrowy kluczyk</text>
+  <rect x="475" y="540" width="330" height="90" rx="12" fill="url(#app)" filter="url(#shadow)"/>
+  <text x="640" y="568" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">App Konsumencka</text>
+  <text x="640" y="587" text-anchor="middle" font-size="10.5" fill="#fde68a">circle-care / care-deck</text>
+  <text x="640" y="602" text-anchor="middle" font-size="10.5" fill="#fde68a">Wyzwanie dzień po dniu</text>
+  <text x="640" y="617" text-anchor="middle" font-size="10.5" fill="#fde68a">Jawne autorstwo (influ./specj.)</text>
 
-  <!-- Fuel & Energy -->
-  <rect x="460" y="410" width="280" height="90" rx="12" fill="url(#fin)" filter="url(#shadow)"/>
-  <text x="600" y="440" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Fuel &amp; Energy</text>
-  <text x="600" y="458" text-anchor="middle" font-size="10.5" fill="#d1fae5">Porownywarka stacji paliw</text>
-  <text x="600" y="472" text-anchor="middle" font-size="10.5" fill="#d1fae5">Karta paliwowa DKV/UTA</text>
-  <text x="600" y="486" text-anchor="middle" font-size="10.5" fill="#d1fae5">Apple Pay | Rejestr tankowan</text>
+  <rect x="835" y="540" width="330" height="90" rx="12" fill="url(#app)" filter="url(#shadow)"/>
+  <text x="1000" y="568" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Powiadomienia</text>
+  <text x="1000" y="587" text-anchor="middle" font-size="10.5" fill="#fde68a">Email / SMS / push</text>
+  <text x="1000" y="602" text-anchor="middle" font-size="10.5" fill="#fde68a">Przypomnienia, follow-up</text>
+  <text x="1000" y="617" text-anchor="middle" font-size="10.5" fill="#fde68a">Handoff do warstwy LTV</text>
 
-  <!-- Reminders & Scheduling -->
-  <rect x="860" y="410" width="280" height="90" rx="12" fill="url(#srv)" filter="url(#shadow)"/>
-  <text x="1000" y="440" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Reminders &amp; Scheduling</text>
-  <text x="1000" y="458" text-anchor="middle" font-size="10.5" fill="#fef3c7">Opony | Klimatyzacja | TUV</text>
-  <text x="1000" y="472" text-anchor="middle" font-size="10.5" fill="#fef3c7">Auto-umawianie terminow</text>
-  <text x="1000" y="486" text-anchor="middle" font-size="10.5" fill="#fef3c7">Sync kalendarza</text>
+  <line x1="280" y1="630" x2="280" y2="670" stroke="#cfc8b4" stroke-width="1.5"/>
+  <line x1="640" y1="630" x2="640" y2="670" stroke="#cfc8b4" stroke-width="1.5"/>
+  <line x1="1000" y1="630" x2="1000" y2="670" stroke="#cfc8b4" stroke-width="1.5"/>
 
-  <!-- Connectors Row 3 → Row 4 -->
-  <line x1="200" y1="500" x2="200" y2="530" stroke="#94a3b8" stroke-width="1.5"/>
-  <line x1="600" y1="500" x2="600" y2="530" stroke="#94a3b8" stroke-width="1.5"/>
-  <line x1="1000" y1="500" x2="1000" y2="530" stroke="#94a3b8" stroke-width="1.5"/>
+  <!-- ===== BAND 4 — SIEĆ / LTV ===== -->
+  <rect x="115" y="670" width="330" height="90" rx="12" fill="url(#ltv)" filter="url(#shadow)"/>
+  <text x="280" y="698" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Routing 1:1 (warstwa 2)</text>
+  <text x="280" y="717" text-anchor="middle" font-size="10.5" fill="#99f6e4">Edge cases z kohorty</text>
+  <text x="280" y="732" text-anchor="middle" font-size="10.5" fill="#99f6e4">→ specjalista w mieście klienta</text>
+  <text x="280" y="747" text-anchor="middle" font-size="10.5" fill="#99f6e4">Płacący klient przed wejściem do sieci</text>
 
-  <!-- ===== ROW 4 ===== -->
+  <rect x="475" y="670" width="330" height="90" rx="12" fill="url(#ltv)" filter="url(#shadow)"/>
+  <text x="640" y="698" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Sieć Partnerów Wellness (w. 3)</text>
+  <text x="640" y="717" text-anchor="middle" font-size="10.5" fill="#99f6e4">Routing post-kurs (recovery)</text>
+  <text x="640" y="732" text-anchor="middle" font-size="10.5" fill="#99f6e4">Fizjo · dietetyk · regeneracja</text>
+  <text x="640" y="747" text-anchor="middle" font-size="10.5" fill="#99f6e4">Revenue share od skierowania</text>
 
-  <!-- Fleet Management -->
-  <rect x="60" y="530" width="280" height="90" rx="12" fill="url(#con)" filter="url(#shadow)"/>
-  <text x="200" y="560" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Fleet Management</text>
-  <text x="200" y="578" text-anchor="middle" font-size="10.5" fill="#ddd6fe">Zarzadzanie flota</text>
-  <text x="200" y="592" text-anchor="middle" font-size="10.5" fill="#ddd6fe">Przypisanie osob do pojazdow</text>
-  <text x="200" y="606" text-anchor="middle" font-size="10.5" fill="#ddd6fe">Przekazanie pojazdu</text>
+  <rect x="835" y="670" width="330" height="90" rx="12" fill="url(#ltv)" filter="url(#shadow)"/>
+  <text x="1000" y="698" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Rezerwacje &amp; Kalendarz</text>
+  <text x="1000" y="717" text-anchor="middle" font-size="10.5" fill="#99f6e4">Umawianie sesji 1:1 i wizyt</text>
+  <text x="1000" y="732" text-anchor="middle" font-size="10.5" fill="#99f6e4">Dostępność partnerów</text>
+  <text x="1000" y="747" text-anchor="middle" font-size="10.5" fill="#99f6e4">Sync kalendarza</text>
 
-  <!-- Community -->
-  <rect x="460" y="530" width="280" height="90" rx="12" fill="url(#mkt)" filter="url(#shadow)"/>
-  <text x="600" y="560" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Community</text>
-  <text x="600" y="578" text-anchor="middle" font-size="10.5" fill="#fce7f3">Reddit dla samochodow</text>
-  <text x="600" y="592" text-anchor="middle" font-size="10.5" fill="#fce7f3">Porady prawne | Q&amp;A</text>
-  <text x="600" y="606" text-anchor="middle" font-size="10.5" fill="#fce7f3">Forum per typ auta</text>
+  <line x1="280" y1="760" x2="280" y2="800" stroke="#cfc8b4" stroke-width="1.5"/>
+  <line x1="640" y1="760" x2="640" y2="800" stroke="#cfc8b4" stroke-width="1.5"/>
+  <line x1="1000" y1="760" x2="1000" y2="800" stroke="#cfc8b4" stroke-width="1.5"/>
 
-  <!-- DIY Assistant + Roadside -->
-  <rect x="860" y="530" width="280" height="90" rx="12" fill="url(#srv)" filter="url(#shadow)"/>
-  <text x="1000" y="560" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">DIY &amp; Roadside</text>
-  <text x="1000" y="578" text-anchor="middle" font-size="10.5" fill="#fef3c7">Poradniki wideo per model</text>
-  <text x="1000" y="592" text-anchor="middle" font-size="10.5" fill="#fef3c7">Pierwsza pomoc | Holowanie</text>
-  <text x="1000" y="606" text-anchor="middle" font-size="10.5" fill="#fef3c7">Auta zastepcze</text>
+  <!-- ===== BAND 5 — DANE & OPERACJE ===== -->
+  <rect x="115" y="800" width="330" height="90" rx="12" fill="url(#ops)" filter="url(#shadow)"/>
+  <text x="280" y="828" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Performance Marketing</text>
+  <text x="280" y="847" text-anchor="middle" font-size="10.5" fill="#d6d3d1">Kampanie pod produkt influencera</text>
+  <text x="280" y="862" text-anchor="middle" font-size="10.5" fill="#d6d3d1">Atrybucja, CAC, piksele</text>
+  <text x="280" y="877" text-anchor="middle" font-size="10.5" fill="#d6d3d1">Meta / Google Ads</text>
 
-  <!-- Connectors Row 4 → Row 5 -->
-  <line x1="200" y1="620" x2="600" y2="660" stroke="#94a3b8" stroke-width="1.5"/>
-  <line x1="600" y1="620" x2="600" y2="660" stroke="#94a3b8" stroke-width="1.5"/>
-  <line x1="1000" y1="620" x2="600" y2="660" stroke="#94a3b8" stroke-width="1.5"/>
+  <rect x="475" y="800" width="330" height="90" rx="12" fill="url(#ops)" filter="url(#shadow)"/>
+  <text x="640" y="828" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Analityka &amp; Ścieżka Klienta</text>
+  <text x="640" y="847" text-anchor="middle" font-size="10.5" fill="#d6d3d1">Co kupuje klient po kursie (moat)</text>
+  <text x="640" y="862" text-anchor="middle" font-size="10.5" fill="#d6d3d1">LTV, retencja, kohorty</text>
+  <text x="640" y="877" text-anchor="middle" font-size="10.5" fill="#d6d3d1">Baza decyzyjna pod kolejne projekty</text>
 
-  <!-- ===== ROW 5 — Marketplace ===== -->
+  <rect x="835" y="800" width="330" height="90" rx="12" fill="url(#ops)" filter="url(#shadow)"/>
+  <text x="1000" y="828" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Operacje Studio</text>
+  <text x="1000" y="847" text-anchor="middle" font-size="10.5" fill="#d6d3d1">Panel operatora znany.pl</text>
+  <text x="1000" y="862" text-anchor="middle" font-size="10.5" fill="#d6d3d1">Support / helpdesk, refundy</text>
+  <text x="1000" y="877" text-anchor="middle" font-size="10.5" fill="#d6d3d1">Zarządzanie projektami i splitami</text>
 
-  <rect x="380" y="660" width="440" height="80" rx="12" fill="url(#mkt)" filter="url(#shadow)"/>
-  <text x="600" y="690" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Marketplace</text>
-  <text x="600" y="708" text-anchor="middle" font-size="10.5" fill="#fce7f3">Sprzedaz auta | Sklep akcesoriow | Serwis rejestracyjny</text>
-  <text x="600" y="722" text-anchor="middle" font-size="10.5" fill="#fce7f3">mobile.de | Autoscout | wirkaufendeinauto</text>
+  <line x1="280" y1="890" x2="640" y2="930" stroke="#cfc8b4" stroke-width="1.5"/>
+  <line x1="640" y1="890" x2="640" y2="930" stroke="#cfc8b4" stroke-width="1.5"/>
+  <line x1="1000" y1="890" x2="640" y2="930" stroke="#cfc8b4" stroke-width="1.5"/>
 
-  <!-- Connector Row 5 → Row 6 -->
-  <line x1="600" y1="740" x2="600" y2="770" stroke="#94a3b8" stroke-width="1.5"/>
+  <!-- ===== INTEGRATION HUB ===== -->
+  <rect x="230" y="930" width="820" height="84" rx="12" fill="url(#integ)" filter="url(#shadow)"/>
+  <text x="640" y="960" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Integration Hub</text>
+  <text x="640" y="980" text-anchor="middle" font-size="10.5" fill="#e7e5e4">Stripe / Przelewy24 · Fakturownia / inFakt · Postmark (email) · SMS</text>
+  <text x="640" y="996" text-anchor="middle" font-size="10.5" fill="#e7e5e4">DNS / domeny · Meta / Google Ads · Rejestr KIF (uprawnienia) · CEIDG (typowanie specjalistów)</text>
 
-  <!-- ===== ROW 6 — Integration Hub ===== -->
-
-  <rect x="260" y="770" width="680" height="80" rx="12" fill="url(#integ)" filter="url(#shadow)"/>
-  <text x="600" y="800" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Integration Hub</text>
-  <text x="600" y="818" text-anchor="middle" font-size="10.5" fill="#cbd5e1">DKV/UTA | blitzer.de | billiger-mietwagen.de | OEM APIs</text>
-  <text x="600" y="832" text-anchor="middle" font-size="10.5" fill="#cbd5e1">Google/Apple Calendar | Apple Pay | OCR Provider</text>
-
-  <!-- Legend -->
-  <rect x="40" y="860" width="14" height="14" rx="3" fill="#3b82f6"/>
-  <text x="60" y="872" font-size="11" fill="#475569">Core Platform</text>
-  <rect x="170" y="860" width="14" height="14" rx="3" fill="#10b981"/>
-  <text x="190" y="872" font-size="11" fill="#475569">Finanse</text>
-  <rect x="270" y="860" width="14" height="14" rx="3" fill="#f59e0b"/>
-  <text x="290" y="872" font-size="11" fill="#475569">Serwis</text>
-  <rect x="370" y="860" width="14" height="14" rx="3" fill="#ef4444"/>
-  <text x="390" y="872" font-size="11" fill="#475569">Wypadki</text>
-  <rect x="480" y="860" width="14" height="14" rx="3" fill="#8b5cf6"/>
-  <text x="500" y="872" font-size="11" fill="#475569">Connected Car</text>
-  <rect x="620" y="860" width="14" height="14" rx="3" fill="#ec4899"/>
-  <text x="640" y="872" font-size="11" fill="#475569">Marketplace</text>
-  <rect x="760" y="860" width="14" height="14" rx="3" fill="#64748b"/>
-  <text x="780" y="872" font-size="11" fill="#475569">Integracje</text>
+  <!-- ===== LEGEND ===== -->
+  <rect x="115" y="1036" width="14" height="14" rx="3" fill="#5c6b32"/>
+  <text x="135" y="1048" font-size="11" fill="#3a3833">Tworzenie</text>
+  <rect x="240" y="1036" width="14" height="14" rx="3" fill="#b91c1c"/>
+  <text x="260" y="1048" font-size="11" fill="#3a3833">Compliance (bramka)</text>
+  <rect x="430" y="1036" width="14" height="14" rx="3" fill="#c2410c"/>
+  <text x="450" y="1048" font-size="11" fill="#3a3833">Sprzedaż (Landing)</text>
+  <rect x="600" y="1036" width="14" height="14" rx="3" fill="#a16207"/>
+  <text x="620" y="1048" font-size="11" fill="#3a3833">Dostarczenie (App)</text>
+  <rect x="775" y="1036" width="14" height="14" rx="3" fill="#0f766e"/>
+  <text x="795" y="1048" font-size="11" fill="#3a3833">Sieć / LTV</text>
+  <rect x="890" y="1036" width="14" height="14" rx="3" fill="#44403c"/>
+  <text x="910" y="1048" font-size="11" fill="#3a3833">Dane &amp; Ops</text>
+  <rect x="1010" y="1036" width="14" height="14" rx="3" fill="#78716c"/>
+  <text x="1030" y="1048" font-size="11" fill="#3a3833">Integracje</text>
 </svg>
